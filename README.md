@@ -105,6 +105,7 @@ Langkah:
 ```
 2. Periksa package.json
    - Catatan: package.json saat ini berisi skrip Vite dan dependensi Vite/React; namun repo mengandung Next.js (app/ dan next.config.ts). Jika Anda menggunakan Next.js, perbarui package.json agar memiliki skrip:
+     
      ```
      - "dev": "next dev"
      - "build": "next build"
