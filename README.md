@@ -91,30 +91,35 @@ How it fits together (runtime shape)
 
 Persiapan development (langkah cepat)
 ------------------------------------
+```
 Prasyarat:
 - Node.js (direkomendasikan LTS terbaru, mis. 18+/20+)
 - PostgreSQL (untuk development; atau SQLite jika ingin cepat, tapi prisma/schema.prisma memakai provider postgresql)
 - pnpm / npm / yarn (pakai salah satu)
-
+```
 Langkah:
+```
 1. Clone
    git clone https://github.com/sannnproject/KARSIR-UMKM.git
    cd KARSIR-UMKM
-
+```
 2. Periksa package.json
    - Catatan: package.json saat ini berisi skrip Vite dan dependensi Vite/React; namun repo mengandung Next.js (app/ dan next.config.ts). Jika Anda menggunakan Next.js, perbarui package.json agar memiliki skrip:
+     ```
      - "dev": "next dev"
      - "build": "next build"
      - "start": "next start"
      - dan dependency "next" (sesuaikan versi stabil terbaru)
+     ```
    - Jika repo dimaksudkan untuk Vite/React standalone, pastikan `app/` Next.js tidak dipakai. Pastikan keputusan stack sebelum menjalankan.
 
 3. Install deps
+   ```
    - npm install
    - atau yarn install
    - atau pnpm install
 
-4. Setup .env (lihat bagian ENV)
+5. Setup .env (lihat bagian ENV)
 
 Environment variables (rekomendasi .env.example)
 -----------------------------------------------
