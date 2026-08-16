@@ -1,192 +1,237 @@
 # KARSIR-UMKM
 
-![License](https://img.shields.io/github/license/sannnproject/KARSIR-UMKM?style=flat-square)
-![Top Language](https://img.shields.io/github/languages/top/sannnproject/KARSIR-UMKM?style=flat-square)
-![Last Commit](https://img.shields.io/github/last-commit/sannnproject/KARSIR-UMKM?style=flat-square)
-![Stars](https://img.shields.io/github/stars/sannnproject/KARSIR-UMKM?style=flat-square)
-![Open Issues](https://img.shields.io/github/issues/sannnproject/KARSIR-UMKM?style=flat-square)
+[![License](https://img.shields.io/github/license/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM/blob/main/LICENSE)
+[![Top Language](https://img.shields.io/github/languages/top/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM)
+[![Last Commit](https://img.shields.io/github/last-commit/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM/commits)
+[![Open Issues](https://img.shields.io/github/issues/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM/issues)
 
-Modern all‑in‑one POS untuk UMKM Indonesia — cashier, inventory, sales, customers, reports, loyalty & multi‑outlet. Dibangun dengan Next.js + TypeScript + Tailwind CSS + Prisma.
+Modern all‑in‑one POS untuk UMKM Indonesia — cashier, inventory, sales, customers, reports, loyalty & multi‑outlet. Dibangun menggunakan Next.js (App Router) + TypeScript + Tailwind CSS + Prisma (PostgreSQL).
 
----
+Ringkasan singkat
+-----------------
+KARSIR‑UMKM adalah aplikasi web Point‑Of‑Sale yang menargetkan usaha mikro, kecil, dan menengah. Fokus pada alur kasir cepat, manajemen inventori multi‑outlet, laporan usaha, dan fitur loyalty. UI/UX dibuat dengan Next.js + TypeScript dan utilitas Tailwind CSS; persistence dan schema‑driven model dikelola dengan Prisma (schema.prisma ada di folder prisma/).
 
 Daftar isi
-- [Deskripsi Singkat](#deskripsi-singkat)
-- [Fitur Utama](#fitur-utama)
-- [Stack Teknis](#stack-teknis)
-- [Arsitektur & Cara Kerja](#arsitektur--cara-kerja)
-- [Persiapan Lingkungan Pengembangan](#persiapan-lingkungan-pengembangan)
-- [Variabel Lingkungan (ENV)](#variabel-lingkungan-env)
-- [Database & Prisma](#database--prisma)
-- [Menjalankan Aplikasi (Dev / Prod)](#menjalankan-aplikasi-dev--prod)
-- [Deployment (Saran)](#deployment-saran)
-- [Testing & Quality (Panduan umum)](#testing--quality-panduan-umum)
+---------
+- [What this is](#what-this-is)
+- [Stack & Notable libs](#stack--notable-libs)
+- [Struktur repository (penting)](#struktur-repository-penting)
+- [Bagaimana aplikasi bekerja (high level)](#bagaimana-aplikasi-bekerja-high-level)
+- [Persiapan development (langkah cepat)](#persiapan-development-langkah-cepat)
+- [Environment variables (rekomendasi .env.example)](#environment-variables-rekomendasi-envexample)
+- [Prisma & Database](#prisma--database)
+- [Menjalankan aplikasi (dev / build / prod)](#menjalankan-aplikasi-dev--build--prod)
+- [Deployment rekomendasi](#deployment-rekomendasi)
+- [Testing, linting & quality gates](#testing-linting--quality-gates)
+- [Keamanan & best practices operasi](#keamanan--best-practices-operasi)
 - [Contributing](#contributing)
-- [Keamanan](#keamanan)
 - [License](#license)
+- [Catatan repo‑spesifik & checklist sebelum run](#catatan-repo-spesifik--checklist-sebelum-run)
 
-Deskripsi singkat
------------------
-KARSIR-UMKM adalah aplikasi Point‑Of‑Sale (POS) modern yang menargetkan usaha mikro, kecil, dan menengah di Indonesia. Aplikasi ini menyediakan modul kasir, manajemen inventori, pencatatan penjualan, data pelanggan, laporan dan fitur loyalty serta dukungan multi-outlet. Fokus implementasi menggunakan teknologi web modern: Next.js untuk UI dan API, TypeScript untuk tipe, Tailwind CSS untuk styling utility-first, dan Prisma sebagai ORM/alat migrasi database.
-
-Fitur utama
------------
-- Kasir (checkout cepat, scanning barcode / input manual)
-- Manajemen inventori (barang, stok, varian)
-- Pencatatan transaksi penjualan (riwayat, filter)
-- Pelanggan & loyalty (data pelanggan, sistem poin/loyalty — jika diaktifkan)
-- Laporan (laporan penjualan, laporan stok, ringkasan outlet)
-- Multi‑outlet (kelola beberapa cabang/outlet dari satu akun administratif)
-- API internal menggunakan Next.js API routes (server-side) yang berinteraksi dengan Prisma
-
-Stack teknis
+What this is
 ------------
-- Next.js — framework React untuk UI, SSR/SSG dan API routes
-- TypeScript — bahasa utama kode (strongly-typed)
-- Tailwind CSS — utility-first styling
-- Prisma — Type‑safe ORM, schema-driven migrations & query builder
-- Node.js — runtime untuk Next.js
-- Database (pilihan) — Prisma mendukung beberapa provider (PostgreSQL, MySQL, SQLite, dll). Anda harus menyediakan DATABASE_URL yang sesuai. (Contoh connection string PostgreSQL disediakan di bagian Database)
+Aplikasi POS berbasis web untuk UMKM Indonesia yang mendukung kasir, manajemen produk & stok, pembelian, laporan, dan loyalty — digunakan oleh pemilik toko, cashier, dan admin outlet.
 
-Arsitektur & cara kerja
------------------------
-1. Frontend & UI
-   - Dibangun dengan Next.js + TypeScript.
-   - Halaman dapat dibuat dengan rendering sisi server (SSR), static (SSG) atau client-side sesuai kebutuhan fitur kasir/real-time.
-   - Styling menggunakan Tailwind CSS, sehingga komponen dibangun dengan utilitas kelas.
+Stack & Notable libs
+--------------------
+- Language: TypeScript (seluruh kode sumber utama)
+- Framework / runtime: Next.js (App Router) — ada folder `app/` dan `next.config.ts`
+- Styling: Tailwind CSS (global styles di `app/globals.css`, postcss config tersedia)
+- ORM / DB: Prisma (schema di `prisma/schema.prisma`, datasource = postgresql)
+- Notable libraries (di kode berdasarkan struktur):
+  - prisma (prisma client, migrations)
+  - Tailwind utilities (postcss + tailwind)
+  - React / Next.js components (App Router, server/client components)
+  - Struktur komponen modular (`components/` banyak subfolder seperti pos, products, layout, dsb.)
 
-2. Backend (Serverless/API routes)
-   - Endpoint server internal umumnya disediakan lewat Next.js API routes atau App Router server handlers (tergantung struktur repo).
-   - Logika bisnis (transaksi, pengurangan stok, laporan agregasi) dijalankan di server dan berinteraksi dengan Prisma untuk akses database.
+Struktur repository (top-level penting)
+---------------------------------------
+(berdasarkan isi repo saat ini — saya hanya menampilkan yang relevan)
+```
+.eslintrc.json         # ESLint config
+.gitignore
+README.md              # (file ini — diupdate)
+app/                   # Next.js App Router (pages/layout, page.tsx, api routes)
+  layout.tsx
+  page.tsx
+  globals.css
+components/            # UI & Views (pos, products, layout, reports, dsb.)
+context/               # React context providers (AppContext, CartContext)
+hooks/                 # custom hooks
+lib/                   # util/klien helper (helpers, API clients)
+prisma/
+  schema.prisma        # Prisma schema (postgreSQL provider — models: Business, Product, Transaction, Inventory...)
+src/                   # (ada; periksa untuk implementasi utilities / dukungan)
+types/                 # shared types (TypeScript)
+next.config.ts
+next-env.d.ts
+tsconfig.json
+postcss.config.mjs
+vite.config.ts         # NOTE: ada — lihat catatan tentang package.json/vite
+package.json           # NOTE: berisi skrip & deps (lihat penjelasan tentang mismatch)
+index.html             # NOTE: ada; biasanya untuk Vite — periksa apakah diperlukan
+prisma/schema.prisma   # (terlihat pada tree, panjang, model lengkap)
+```
 
-3. Persistence
-   - Prisma mengelola models (schema) dan migrasi. Aplikasi membaca/menulis data transaksi, item inventori, pelanggan, outlet, dsb. secara terstruktur melalui Prisma Client yang di-generate dari prisma/schema.prisma.
+How it fits together (runtime shape)
+-----------------------------------
+- Frontend: Next.js App Router (folder `app/`) — entry point `app/page.tsx` yang membungkus seluruh aplikasi menggunakan `AppProvider` & `CartProvider` dari `context/`. Komponen layout (Header, Sidebar, MobileNav, dsb.) berada di `components/layout/`.
+- Views: Banyak "view modules" terpisah (Dashboard, POS terminal, Products, Inventory, Transactions, Reports, Customers, Outlets, Settings, dst.) di `components/*`.
+- API: Next.js API routes ada di `app/api/` (server-side handlers). Mereka menggunakan Prisma Client (generated) untuk operasi database.
+- Persistence: Prisma Client (generated) berinteraksi dengan Postgres sesuai `prisma/schema.prisma`. Model utama: Business, Outlet, User, Product/ProductVariant, Inventory, Transaction/TransactionItem, Payment, Promotion, Voucher, Purchase, InventoryMovement.
+- Data flow (contoh transaksi):
+  1. Kasir membuat transaksi melalui UI POS (component `components/pos/PosTerminal`).
+  2. UI panggil API route Next.js mengirim payload transaksi.
+  3. Server handler memvalidasi payload, memulai transaksi DB (Prisma transaction) yang:
+     - membuat `Transaction` + `TransactionItem[]`
+     - membuat `Payment` record(s)
+     - menambah `InventoryMovement` dan menurunkan `Inventory.quantity` sesuai outlet
+     - update `Customer.loyalty` / `LoyaltyTransaction` bila ada
+  4. Response dikirim ke client; client menampilkan invoice dan event UI (print/open drawer, dsb.) sesuai BusinessSettings.
 
-4. Keamanan & konsistensi data
-   - Operasi kritikal (update stok, create transaksi) harus dijalankan di server untuk menjaga konsistensi dan menghindari manipulasi client-side.
-   - Gunakan transaksi database (Prisma transaction) untuk operasi multi-step (mis. create transaction + update stock) agar atomic.
-
-Persiapan lingkungan pengembangan
---------------------------------
+Persiapan development (langkah cepat)
+------------------------------------
 Prasyarat:
-- Node.js (direkomendasikan LTS terbaru, mis. 18+ atau 20+)
-- Package manager (npm, pnpm, atau yarn — gunakan yang sesuai dengan proyek)
-- Database untuk pengembangan (mis. PostgreSQL / MySQL / SQLite). Prisma mendukung beberapa provider — cukup atur DATABASE_URL.
+- Node.js (direkomendasikan LTS terbaru, mis. 18+/20+)
+- PostgreSQL (untuk development; atau SQLite jika ingin cepat, tapi prisma/schema.prisma memakai provider postgresql)
+- pnpm / npm / yarn (pakai salah satu)
 
-Langkah umum:
-1. Clone repo
-   - git clone https://github.com/sannnproject/KARSIR-UMKM.git
-   - cd KARSIR-UMKM
+Langkah:
+1. Clone
+   git clone https://github.com/sannnproject/KARSIR-UMKM.git
+   cd KARSIR-UMKM
 
-2. Install dependensi
+2. Periksa package.json
+   - Catatan: package.json saat ini berisi skrip Vite dan dependensi Vite/React; namun repo mengandung Next.js (app/ dan next.config.ts). Jika Anda menggunakan Next.js, perbarui package.json agar memiliki skrip:
+     - "dev": "next dev"
+     - "build": "next build"
+     - "start": "next start"
+     - dan dependency "next" (sesuaikan versi stabil terbaru)
+   - Jika repo dimaksudkan untuk Vite/React standalone, pastikan `app/` Next.js tidak dipakai. Pastikan keputusan stack sebelum menjalankan.
+
+3. Install deps
    - npm install
    - atau yarn install
    - atau pnpm install
 
-3. Siapkan environment variables (lihat bagian selanjutnya)
+4. Setup .env (lihat bagian ENV)
 
-Variabel lingkungan (ENV)
--------------------------
-Minimum yang umum diperlukan (nama variabel disesuaikan dengan implementasi sebenarnya di repo; cek file .env.example di repo jika tersedia):
-- DATABASE_URL — connection string untuk database, contoh PostgreSQL:
-  postgres://username:password@localhost:5432/karsir_umkm
-- NEXT_PUBLIC_BASE_URL — (opsional) URL publik frontend, dipakai untuk absolute links di client
-- APP_SECRET / NEXTAUTH_SECRET — (jika ada autentikasi) secret untuk session/auth (jika repo menggunakan NextAuth atau mekanisme serupa)
+Environment variables (rekomendasi .env.example)
+-----------------------------------------------
+Buat file `.env` atau `.env.local` di root:
+```
+# Database
+DATABASE_URL="postgresql://dbuser:dbpass@localhost:5432/karsir_umkm?schema=public"
 
-Catatan: Nama variabel sebenarnya akan tergantung pada implementasi di kode (process.env.NAMA_VAR). Pastikan cocok dengan yang digunakan di kode.
+# Next.js / app
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 
-Database & Prisma
+# Session / Auth (jika dipakai)
+NEXTAUTH_SECRET="replace-with-secure-random"
+JWT_SECRET="replace-with-secure-random"
+
+# Prisma
+# (tidak ada var Prisma tambahan default; namun sesuaikan bila memakai shadow db)
+```
+
+Prisma & Database
 -----------------
-Prisma bertindak sebagai ORM dan alat migrasi. Berikut urutan tugas Prisma yang umum:
+- Prisma schema: `prisma/schema.prisma` (provider = "postgresql" dan url = env("DATABASE_URL")).
+- Generate client:
+  npx prisma generate
+- Migrations (dev):
+  npx prisma migrate dev --name init
+  - Perintah di atas membuat/menerapkan migrasi berdasarkan schema.prisma dan menghasilkan Prisma Client.
+- Deploy migrations (production):
+  npx prisma migrate deploy
+- Seed data:
+  - Jika ada script seed (cek `prisma/seed.ts` atau package.json scripts), jalankan `npm run prisma:seed` atau `node prisma/seed.js` sesuai implementasi.
 
-1. Generate Prisma Client
-   - npx prisma generate
-   - (atau: pnpm prisma generate / yarn prisma generate)
-
-2. Membuat/menjalankan migrasi (development)
-   - npx prisma migrate dev --name init
-     - Perintah ini membuat/menerapkan migrasi dan menghasilkan Prisma Client
-   - Untuk menjalankan migrasi di production:
-     - npx prisma migrate deploy
-
-3. Menjalankan query dari kode
-   - Di server (API routes / server handlers) impor Prisma Client dan gunakan untuk CRUD:
-     - prisma.user.findMany(...)
-     - prisma.transaction.create({...})
-
-4. Seed (opsional)
-   - Jika repo menyediakan script seed, jalankan:
-     - node prisma/seed.js
-     - atau npm run prisma:seed (cek package.json)
-
-Catatan mengenai provider DB:
-- Jika Anda memilih PostgreSQL, set DATABASE_URL seperti: postgres://user:pass@host:5432/dbname
-- Jika memilih SQLite untuk development cepat, set DATABASE_URL=file:./dev.db
-- Prisma schema menentukan provider di file prisma/schema.prisma (lihat file tersebut di repo).
-
-Contoh Docker Compose (opsional — contoh Postgres)
-- Ini hanya contoh membantu untuk dev; bukan bagian wajib:
-  - services:
-    - db: image: postgres:15; environment: POSTGRES_USER/POSTGRES_PASSWORD/POSTGRES_DB
-    - app: build: .; environment: DATABASE_URL=postgres://user:pass@db:5432/dbname
-  - Jalankan: docker compose up -d
-  - Setelah db siap: npx prisma migrate deploy atau npx prisma migrate dev
-
-Menjalankan aplikasi (Dev / Prod)
----------------------------------
-Perintah standar Next.js / Node.js yang biasanya tersedia:
-
+Menjalankan aplikasi (dev / build / production)
+-----------------------------------------------
+Contoh (Next.js):
 - Development:
-  - npm run dev
-  - Menjalankan server dev Next.js (hot-reload)
+  npm run dev
+  (harus ada script "dev":"next dev" di package.json)
 
-- Build untuk production:
-  - npm run build
-  - npm run start
-  - Atau: npm run start:prod (tergantung skrip di package.json)
+- Build:
+  npm run build
 
-- Prisma:
-  - npx prisma generate
-  - npx prisma migrate dev --name <name>
-  - npx prisma migrate deploy
+- Start (production):
+  npm run start
 
-Pastikan environment variables ter-set sebelum menjalankan build/start.
+Prisma:
+- npx prisma generate
+- npx prisma migrate dev --name <migration-name>
+- npx prisma migrate deploy
 
-Deployment (Saran)
-------------------
-- Vercel: Next.js bekerja sangat baik di Vercel (support SSR, ISR, serverless functions). Set environment variables di UI Vercel.
-- Platform lain: Gunakan Node server (Next.js start) atau containerize aplikasi. Pastikan Prisma dapat terhubung ke DB production dan jalankan migrasi (npx prisma migrate deploy) sebagai bagian dari pipeline.
-- Backup DB & migrasi: Selalu uji migrasi di staging sebelum mem-push ke production.
+Jika saat ini package.json belum diupdate untuk Next, lakukan update dependency & scripts sebelum menjalankan. Saya bisa bantu menyiapkan patch package.json jika Anda mau.
 
-Testing & Quality (Panduan umum)
+Deployment rekomendasi
+----------------------
+- Vercel: native support Next.js App Router. Atur environment variables di dashboard dan gunakan `npx prisma migrate deploy` pada proses deployment, atau jalankan migrasi via CI ke Production DB.
+- Container: Dockerfile + docker-compose (Postgres + app). Jalankan migrasi pada entrypoint/CI.
+- Pastikan backup DB & monitoring, dan uji migrasi di staging.
+
+Testing, linting & quality gates
 -------------------------------
-- Tambahkan unit/integration tests untuk logic sensitif (penanganan transaksi, update stok).
-- Gunakan linting (ESLint) dan formatting (Prettier) bila diinginkan untuk menjaga konsistensi. Jika repo sudah menyertakan konfigurasi ESLint/Prettier, jalankan skrip yang ada di package.json (`npm run lint`, `npm run format`).
+- Lint/Typecheck: jalankan `npm run lint` atau `tsc --noEmit` (cek package.json untuk skrip).
+- Testing: tambahkan test runner (Vitest / Jest / Playwright) jika belum ada untuk unit/integration e2e (kritis untuk logika transaksi & update stok).
+- CI: integrasikan tests & migrations di pipeline (GitHub Actions atau platform CI lainnya) sebelum merge.
+
+Keamanan & best practices operasi
+---------------------------------
+- Jangan commit secrets ke repo. Gunakan env vars / secret manager.
+- Validasi payload di server (Next API routes) sebelum menulis ke DB.
+- Gunakan Prisma transaction untuk operasi multi-step (create transaction + update inventory + loyalty) agar atomic.
+- Batasi akses API/permissions per role (RoleType ada di prisma: OWNER, ADMIN, CASHIER, STAFF).
+- Audit logs: gunakan model AuditLog yang tersedia untuk mencatat tindakan sensitif.
 
 Contributing
 ------------
-1. Baca CONTRIBUTING.md jika tersedia.
-2. Fork → branch fitur (`feat/<singkat-deskripsi>`) atau perbaikan (`fix/<singkat-deskripsi>`).
-3. Sertakan deskripsi perubahan dan test bila relevan.
-4. Gunakan commit message yang jelas (mis: feat: tambah modul laporan outlet).
-5. Buat Pull Request ke branch utama (mis. main atau develop) repo upstream.
-
-Keamanan
---------
-- Jangan menyimpan secrets (password, API keys) dalam repo. Gunakan environment variables.
-- Lakukan validasi dan sanitize input pada API routes untuk mencegah injeksi / over-posting.
-- Untuk operasi finansial/transaksi, gunakan mekanisme transaksi DB (Prisma transaction) untuk atomicity.
-
-FAQ singkat
------------
-Q: Database apa yang wajib dipakai?
-A: Tidak ada DB "wajib" — Prisma mendukung PostgreSQL, MySQL, SQLite, dsb. Pilih yang sesuai kebutuhan. Untuk production skala UMKM dengan multi-outlet, PostgreSQL sering direkomendasikan.
-
-Q: Apakah ada integrasi pembayaran / hardware kasir?
-A: README ini tidak menambahkan integrasi spesifik. Jika proyek memerlukan integrasi hardware (printer, barcode scanner) atau gateway pembayaran, implementasi dan konfigurasi tambahan diperlukan di level server/client.
+1. Fork repo → buat branch feature/xxx atau fix/xxx.
+2. Ikuti konvensi commit (feat:, fix:, docs:, chore:).
+3. Tambahkan test bila mengubah logic bisnis.
+4. Buka PR ke branch default (main). Sertakan deskripsi & langkah verifikasi.
 
 License
 -------
-Proyek ini dilisensikan di bawah Apache License 2.0.
+Proyek dilisensikan di bawah Apache License 2.0. Lihat file LICENSE di repo untuk teks lengkap.
 
-Lihat juga: LICENSE file di repo untuk teks lengkap lisensi Apache‑2.0.
+Catatan repo‑spesifik & checklist sebelum run
+---------------------------------------------
+1. Prisma:
+   - `prisma/schema.prisma` ada dan menggunakan provider postgresql (lihat file). Pastikan `DATABASE_URL` mengarah ke Postgres.
+   - Schema mencakup model kunci: Business, Outlet, User, Product, Inventory, Transaction, TransactionItem, Payment, Purchase, InventoryMovement, dll.
+
+2. Next.js:
+   - Folder `app/` serta `next.config.ts` dan `next-env.d.ts` menandakan Next.js App Router dipakai.
+   - `app/page.tsx` menggunakan `AppProvider` dan `CartProvider` dari `context/` serta banyak view components (pos, products, inventory, dsb.).
+
+3. package.json & vite.config.ts / index.html:
+   - package.json saat ini berisi skrip Vite dan dependensi Vite/React; ada juga `vite.config.ts` dan `index.html`.
+   - Ini adalah inkonsistensi: jika targetnya Next.js, Anda harus:
+     - menambahkan dependency "next" (versi kompatibel dengan React/TS),
+     - mengganti skrip dev/build/start ke Next.js,
+     - menghapus/menonaktifkan skrip Vite jika tidak diperlukan.
+   - Jika targetnya adalah aplikasi Vite biasa, maka `app/` Next.js mungkin tidak digunakan — review diperlukan.
+
+4. Langkah yang saya rekomendasikan sekarang:
+   - Putuskan stack final (Next.js vs Vite). Berdasarkan struktur `app/` dan `next.config.ts`, saya sarankan Next.js.
+   - Update package.json agar sesuai Next.js (saya bisa bantu buat patch).
+   - Buat `.env.example` berdasarkan rekomendasi di atas.
+   - Jalankan `npx prisma generate` lalu `npx prisma migrate dev --name init`.
+
+Try asking
+----------
+- "Bisakah kamu buatkan .env.example dan docker-compose.yml untuk Postgres, lalu commit ke repo?"
+- "Buatkan patch package.json yang mengganti skrip Vite ke skrip Next.js dan tambahkan dependensi next — lalu commit ke branch `chore/next-scripts`?"
+- "Buat file GitHub Action untuk CI: install, lint, prisma migrate deploy (staging), dan run tests?"
+
+---
+
+Catatan akhir
+------------
+README ini disusun berdasarkan inspeksi langsung file-folder di repo (app/, prisma/schema.prisma, components/, next.config.ts, dsb.). Saya menemukan perbedaan antara package.json (Vite) dan struktur Next.js — mohon konfirmasi stack final supaya saya bisa:
+- 1) langsung commit README.md ke repository (branch/commit yang Anda pilih), dan
+- 2) bila mau, menambahkan `.env.example`, `docker-compose.yml` untuk Postgres, dan patch `package.json` agar skrip cocok dengan Next.js.
