@@ -142,14 +142,20 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
 
         {/* Current User (static, single OWNER) */}
         <div className="flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 sm:pr-2.5 rounded-lg sm:rounded-2xl border border-[#dcd7ce] dark:border-[#333b49] bg-[#f7f6f2] dark:bg-[#20252e] min-h-[32px] sm:min-h-[36px]">
-          <img
-            src={user.avatar}
-            alt={user.name}
-            className="h-6 w-6 sm:h-7 sm:w-7 rounded-md sm:rounded-xl object-cover ring-1 ring-[#383f4d]/30"
-          />
+          {user.avatar ? (
+            <img
+              src={user.avatar}
+              alt={user.name || user.role}
+              className="h-6 w-6 sm:h-7 sm:w-7 rounded-md sm:rounded-xl object-cover ring-1 ring-[#383f4d]/30"
+            />
+          ) : (
+            <span className="h-6 w-6 sm:h-7 sm:w-7 rounded-md sm:rounded-xl bg-[#e8e4da] dark:bg-[#2c3340] flex items-center justify-center text-[#626a7a] dark:text-[#a0a8b7]">
+              <Store className="h-3.5 w-3.5" />
+            </span>
+          )}
           <div className="text-left hidden sm:block">
             <div className="text-xs font-black text-[#1a1d24] dark:text-[#f4f2ec] leading-tight">
-              {user.name}
+              {user.name || 'Owner'}
             </div>
             <div className="text-[9px] font-bold text-[#626a7a] dark:text-[#a0a8b7] uppercase">
               {user.role}
