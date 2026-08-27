@@ -21,7 +21,6 @@ import { CustomersView } from '@/components/customers/CustomersView';
 import { PromotionsView } from '@/components/promotions/PromotionsView';
 import { ReportsView } from '@/components/reports/ReportsView';
 import { EmployeesView } from '@/components/employees/EmployeesView';
-import { OutletsView } from '@/components/outlets/OutletsView';
 import { AuditView } from '@/components/audit/AuditView';
 import { SettingsView } from '@/components/settings/SettingsView';
 
@@ -76,8 +75,6 @@ const MainLayout: React.FC = () => {
         return <ReportsView />;
       case 'employees':
         return <EmployeesView />;
-      case 'outlets':
-        return <OutletsView />;
       case 'audit':
         return <AuditView />;
       case 'settings':

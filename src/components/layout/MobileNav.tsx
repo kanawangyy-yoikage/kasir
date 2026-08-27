@@ -15,7 +15,6 @@ import {
   ClipboardList,
   Store,
   Tag,
-  Building2,
   ShieldCheck,
   Settings,
   Sparkles,
@@ -31,7 +30,7 @@ interface MenuModule {
 }
 
 export const MobileNav: React.FC = () => {
-  const { currentView, setCurrentView, user, activeOutlet, products } = useApp();
+  const { currentView, setCurrentView, user, products } = useApp();
   const { cart } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -58,7 +57,6 @@ export const MobileNav: React.FC = () => {
     { id: 'dashboard', label: 'Dashboard Analitik', category: 'Laporan & Keuangan', icon: LayoutDashboard, allowedRoles: ['OWNER', 'MANAGER'] },
     { id: 'reports', label: 'Laporan Laba Rugi (P&L)', category: 'Laporan & Keuangan', icon: BarChart3, allowedRoles: ['OWNER', 'MANAGER'] },
     { id: 'employees', label: 'Kelola Karyawan (RBAC)', category: 'Pengaturan & Toko', icon: Users, allowedRoles: ['OWNER', 'MANAGER'] },
-    { id: 'outlets', label: 'Multi Cabang / Outlet', category: 'Pengaturan & Toko', icon: Building2, allowedRoles: ['OWNER'] },
     { id: 'audit', label: 'Audit Log Keamanan', category: 'Pengaturan & Toko', icon: ShieldCheck, allowedRoles: ['OWNER'] },
     { id: 'settings', label: 'Pengaturan Toko & Printer', category: 'Pengaturan & Toko', icon: Settings, allowedRoles: ['OWNER', 'MANAGER'] },
   ];
@@ -136,7 +134,7 @@ export const MobileNav: React.FC = () => {
                   Semua Modul My Kasir Gweh ERP
                 </h3>
                 <p className="text-[11px] text-[#6c7585] dark:text-[#9aa2b0]">
-                  Outlet: {activeOutlet.name} • Peran: {user.role}
+                  Peran: {user.role}
                 </p>
               </div>
               <button

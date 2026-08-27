@@ -16,13 +16,11 @@ import {
   ClipboardList,
   Store,
   Tag,
-  ShieldCheck,
-  Building2,
   Settings,
 } from 'lucide-react';
 
 export const LandingView: React.FC = () => {
-  const { setCurrentView, activeOutlet, user, loginAs } = useApp();
+  const { setCurrentView } = useApp();
 
   return (
     <div className="min-h-full p-3.5 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 max-w-7xl mx-auto">
@@ -242,49 +240,6 @@ export const LandingView: React.FC = () => {
           </Card>
         </div>
       </div>
-
-      {/* DEMO ROLE SWITCHER BAR */}
-      <Card className="p-4 sm:p-6 bg-[#f7f6f2] dark:bg-[#1c2026] border-[#e2ded6] dark:border-[#2e3542] space-y-3">
-        <div>
-          <h3 className="text-xs font-black text-[#1a1d24] dark:text-[#f4f2ec]">
-            Uji Coba Peran Pengguna (Role-Based Access Control)
-          </h3>
-          <p className="text-xs text-[#5c6475] dark:text-[#9aa2b0] mt-0.5">
-            Pengguna aktif: <strong>{user?.name}</strong> ({user?.role}) di outlet <strong>{activeOutlet.name}</strong>
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <Button
-            size="sm"
-            variant={user?.role === 'OWNER' ? 'primary' : 'outline'}
-            onClick={() => loginAs('OWNER')}
-          >
-            👑 Owner
-          </Button>
-          <Button
-            size="sm"
-            variant={user?.role === 'MANAGER' ? 'primary' : 'outline'}
-            onClick={() => loginAs('MANAGER')}
-          >
-            🛡️ Manager
-          </Button>
-          <Button
-            size="sm"
-            variant={user?.role === 'CASHIER' ? 'primary' : 'outline'}
-            onClick={() => loginAs('CASHIER')}
-          >
-            🛒 Kasir
-          </Button>
-          <Button
-            size="sm"
-            variant={user?.role === 'STAFF_INVENTORY' ? 'primary' : 'outline'}
-            onClick={() => loginAs('STAFF_INVENTORY')}
-          >
-            📦 Staff Gudang
-          </Button>
-        </div>
-      </Card>
     </div>
   );
 };

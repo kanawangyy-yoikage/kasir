@@ -15,7 +15,6 @@ import {
   Store,
   Settings,
   ShieldCheck,
-  Building2,
   ChevronLeft,
   ChevronRight,
   Clock,
@@ -121,12 +120,6 @@ export const Sidebar: React.FC = () => {
       label: 'Karyawan & Staff',
       icon: Users,
       allowedRoles: ['OWNER', 'MANAGER'],
-    },
-    {
-      id: 'outlets',
-      label: 'Cabang & Outlet',
-      icon: Building2,
-      allowedRoles: ['OWNER'],
     },
     {
       id: 'audit',
