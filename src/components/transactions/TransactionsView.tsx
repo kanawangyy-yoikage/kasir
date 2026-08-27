@@ -58,7 +58,7 @@ export const TransactionsView: React.FC = () => {
   };
 
   const handleExportCSV = () => {
-    const headers = ['No. Invoice', 'Tanggal', 'Kasir', 'Pelanggan', 'Metode Bayar', 'Subtotal', 'Diskon', 'Pajak', 'Total', 'Status'];
+    const headers = ['No. Invoice', 'Tanggal', 'Kasir', 'Pelanggan', 'Metode Bayar', 'Subtotal', 'Diskon', 'Total', 'Status'];
     const rows = filteredTransactions.map((t) => [
       t.invoiceNumber,
       formatDateTime(t.createdAt),
@@ -67,7 +67,6 @@ export const TransactionsView: React.FC = () => {
       t.payment.method,
       t.subtotal,
       t.discountAmount,
-      t.taxAmount,
       t.total,
       t.status,
     ]);
@@ -276,12 +275,6 @@ export const TransactionsView: React.FC = () => {
                 <div className="flex justify-between text-emerald-600">
                   <span>Diskon</span>
                   <span>- {formatRupiah(selectedTrx.discountAmount)}</span>
-                </div>
-              )}
-              {selectedTrx.taxAmount > 0 && (
-                <div className="flex justify-between">
-                  <span>Pajak PB1</span>
-                  <span>{formatRupiah(selectedTrx.taxAmount)}</span>
                 </div>
               )}
               <div className="flex justify-between font-black text-sm pt-1">

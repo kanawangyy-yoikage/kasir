@@ -715,20 +715,6 @@ export const PosTerminal: React.FC = () => {
               </div>
             )}
 
-            {settings.taxEnabled && taxTotal > 0 && (
-              <div className="flex justify-between">
-                <span>PB1 / Pajak ({(activeOutlet.taxRate * 100).toFixed(0)}%)</span>
-                <span>{formatRupiah(taxTotal)}</span>
-              </div>
-            )}
-
-            {settings.serviceFeeEnabled && serviceFeeTotal > 0 && (
-              <div className="flex justify-between">
-                <span>Biaya Layanan ({(activeOutlet.serviceFeeRate * 100).toFixed(0)}%)</span>
-                <span>{formatRupiah(serviceFeeTotal)}</span>
-              </div>
-            )}
-
             <div className="flex justify-between items-baseline pt-1.5 border-t border-[#e2ded6] dark:border-[#2e3542] text-[#1a1d24] dark:text-[#f4f2ec]">
               <span className="text-xs font-black uppercase tracking-wider">Total Tagihan</span>
               <span className="text-base sm:text-lg font-black text-[#1a1d24] dark:text-[#f4f2ec]">
@@ -1392,18 +1378,6 @@ export const PosTerminal: React.FC = () => {
                 <div className="flex justify-between text-[#5c6475]">
                   <span>Diskon</span>
                   <span>- {formatRupiah(lastCompletedTransaction.discountAmount)}</span>
-                </div>
-              )}
-              {lastCompletedTransaction.taxAmount > 0 && (
-                <div className="flex justify-between">
-                  <span>Pajak PB1</span>
-                  <span>{formatRupiah(lastCompletedTransaction.taxAmount)}</span>
-                </div>
-              )}
-              {lastCompletedTransaction.serviceFeeAmount > 0 && (
-                <div className="flex justify-between">
-                  <span>Service Fee</span>
-                  <span>{formatRupiah(lastCompletedTransaction.serviceFeeAmount)}</span>
                 </div>
               )}
               <div className="flex justify-between font-black text-xs pt-1 border-t border-[#1a1d24]">

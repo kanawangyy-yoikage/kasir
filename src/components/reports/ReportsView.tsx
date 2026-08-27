@@ -34,9 +34,6 @@ export const ReportsView: React.FC = () => {
   const totalCOGS = validTransactions.reduce((s, t) => s + t.totalCost, 0);
   const grossProfit = netSales - totalCOGS;
 
-  const totalTaxCollected = validTransactions.reduce((s, t) => s + t.taxAmount, 0);
-  const totalServiceFeeCollected = validTransactions.reduce((s, t) => s + t.serviceFeeAmount, 0);
-
   // Operating Expenses from Petty cash out
   const operationalExpenses = shifts.reduce((s, sh) => s + sh.cashOutExpenses, 0);
 
@@ -56,9 +53,6 @@ export const ReportsView: React.FC = () => {
       ['LABA KOTOR (GROSS PROFIT)', grossProfit],
       ['Biaya Operasional Toko (Petty Cash)', -operationalExpenses],
       ['LABA BERSIH OPERASIONAL (NET PROFIT)', netOperatingProfit],
-      [''],
-      ['Pajak PB1 Restoran Terkumpul', totalTaxCollected],
-      ['Biaya Layanan Service Charge', totalServiceFeeCollected],
     ];
 
     const csvContent =
@@ -183,21 +177,6 @@ export const ReportsView: React.FC = () => {
             <div className="flex justify-between pl-4 pt-1 font-black text-sm text-blue-600 dark:text-blue-400 border-t border-slate-100 dark:border-slate-800">
               <span>LABA BERSIH OPERASIONAL (NET PROFIT)</span>
               <span>{formatRupiah(netOperatingProfit)}</span>
-            </div>
-          </div>
-
-          {/* Tax & Service */}
-          <div className="py-3 space-y-1.5">
-            <div className="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider text-[11px]">
-              4. TITIPAN PAJAK & SERVICE FEE (NON-REVENUE)
-            </div>
-            <div className="flex justify-between pl-4">
-              <span>Pajak Restoran PB1 (11%) Terkumpul</span>
-              <span>{formatRupiah(totalTaxCollected)}</span>
-            </div>
-            <div className="flex justify-between pl-4">
-              <span>Biaya Layanan Service Charge (5%)</span>
-              <span>{formatRupiah(totalServiceFeeCollected)}</span>
             </div>
           </div>
         </div>
