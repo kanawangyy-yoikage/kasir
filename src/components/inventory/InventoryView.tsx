@@ -12,6 +12,7 @@ import {
   ArrowRightLeft,
   Search,
   Plus,
+  Minus,
   AlertTriangle,
   History,
   CheckCircle2,
@@ -153,6 +154,9 @@ export const InventoryView: React.FC = () => {
           <p className="text-xs text-slate-500 mt-0.5">
             Kontrol stok fisik per cabang, audit opname selisih, dan mutasi barang antar outlet
           </p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Gunakan tombol <span className="font-mono">+ / −</span> pada kolom tiap cabang untuk menambah / mengurangi stok produk secara cepat (tanpa opname penuh).
+          </p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -246,12 +250,47 @@ export const InventoryView: React.FC = () => {
                         const s = p.stocks[o.id] || 0;
                         return (
                           <td key={o.id} className="py-3 px-4 text-center">
-                            <Badge
-                              variant={s <= 0 ? 'danger' : s <= p.minStock ? 'warning' : 'default'}
-                              size="sm"
-                            >
-                              {s} {p.unit}
-                            </Badge>
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                type="button"
+                                title={`Kurangi stok ${p.name} di ${o.name}`}
+                                onClick={() =>
+                                  updateProductStock(
+                                    p.id,
+                                    o.id,
+                                    -1,
+                                    'ADJUSTMENT',
+                                    `Penyesuaian manual (kurang) oleh ${user.name}`
+                                  )
+                                }
+                                disabled={s <= 0}
+                                className="h-6 w-6 inline-flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-900/40 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                              >
+                                <Minus className="h-3.5 w-3.5" />
+                              </button>
+                              <Badge
+                                variant={s <= 0 ? 'danger' : s <= p.minStock ? 'warning' : 'default'}
+                                size="sm"
+                              >
+                                {s} {p.unit}
+                              </Badge>
+                              <button
+                                type="button"
+                                title={`Tambah stok ${p.name} di ${o.name}`}
+                                onClick={() =>
+                                  updateProductStock(
+                                    p.id,
+                                    o.id,
+                                    1,
+                                    'ADJUSTMENT',
+                                    `Penyesuaian manual (tambah) oleh ${user.name}`
+                                  )
+                                }
+                                className="h-6 w-6 inline-flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-100 hover:text-emerald-600 dark:hover:bg-emerald-900/40 transition-colors"
+                              >
+                                <Plus className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
                           </td>
                         );
                       })}

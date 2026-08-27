@@ -22,8 +22,6 @@ export const SettingsView: React.FC = () => {
   const [tagline, setTagline] = useState(settings.tagline);
   const [phone, setPhone] = useState(settings.phone);
   const [email, setEmail] = useState(settings.email);
-  const [taxEnabled, setTaxEnabled] = useState(settings.taxEnabled);
-  const [serviceFeeEnabled, setServiceFeeEnabled] = useState(settings.serviceFeeEnabled);
   const [receiptFooter, setReceiptFooter] = useState(settings.receiptFooter);
   const [qrisStatic, setQrisStatic] = useState(settings.qrisStatic || '');
   const [qrisPreview, setQrisPreview] = useState<string>('');
@@ -35,8 +33,6 @@ export const SettingsView: React.FC = () => {
       tagline,
       phone,
       email,
-      taxEnabled,
-      serviceFeeEnabled,
       receiptFooter,
       qrisStatic: qrisStatic || undefined,
     });
@@ -125,7 +121,7 @@ export const SettingsView: React.FC = () => {
           Pengaturan Toko & Konfigurasi Sistem
         </h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Identitas bisnis, footer struk thermal, preferensi pajak, dan cadangan data
+          Identitas bisnis, footer struk thermal, QRIS statis, dan cadangan data
         </p>
       </div>
 
@@ -184,33 +180,6 @@ export const SettingsView: React.FC = () => {
               className="w-full h-10 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs"
             />
           </div>
-        </div>
-
-        {/* Tax and Service charge toggles */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={taxEnabled}
-              onChange={(e) => setTaxEnabled(e.target.checked)}
-              className="h-4 w-4 rounded text-blue-600 focus:ring-blue-500"
-            />
-            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-              Aktifkan Pajak Restoran PB1 (11%) pada setiap transaksi
-            </span>
-          </label>
-
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={serviceFeeEnabled}
-              onChange={(e) => setServiceFeeEnabled(e.target.checked)}
-              className="h-4 w-4 rounded text-blue-600 focus:ring-blue-500"
-            />
-            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-              Aktifkan Biaya Layanan / Service Charge (5%) pada kasir
-            </span>
-          </label>
         </div>
 
         {/* Receipt Footer */}
