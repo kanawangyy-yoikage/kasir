@@ -62,16 +62,15 @@ export const InventoryView: React.FC = () => {
     });
   };
 
-  // Absolute commit: delta = typed qty - current stock
+  // Absolute commit: set stock to the typed value
   const commitStockDraft = (productId: string, outletId: string, current: number, raw: string) => {
     const parsed = parseInt(raw, 10);
     if (Number.isNaN(parsed) || parsed < 0) {
       clearStockDraft(productId, outletId);
       return;
     }
-    const delta = parsed - current;
-    if (delta !== 0) {
-      updateProductStock(productId, outletId, delta, 'ADJUSTMENT', `Penyesuaian manual oleh ${user.name}`);
+    if (parsed !== current) {
+      updateProductStock(productId, outletId, parsed, `Penyesuaian manual oleh ${user.name}`);
     }
     clearStockDraft(productId, outletId);
   };
@@ -79,7 +78,12 @@ export const InventoryView: React.FC = () => {
   // Step by +/-1 (kept as convenience), clearing any pending draft
   const stepStock = (productId: string, outletId: string, current: number, delta: number) => {
     if (delta < 0 && current <= 0) return;
-    updateProductStock(productId, outletId, delta, 'ADJUSTMENT', `Penyesuaian manual (${delta > 0 ? 'tambah' : 'kurang'}) oleh ${user.name}`);
+    updateProductStock(
+      productId,
+      outletId,
+      current + delta,
+      `Penyesuaian manual (${delta > 0 ? 'tambah' : 'kurang'}) oleh ${user.name}`
+    );
     clearStockDraft(productId, outletId);
   };
 
@@ -129,8 +133,7 @@ export const InventoryView: React.FC = () => {
         updateProductStock(
           item.productId,
           activeOutlet.id,
-          item.difference,
-          'ADJUSTMENT',
+          item.physicalStock,
           `Hasil Opname #${newOpname.id.slice(-4)}`
         );
       }
@@ -154,12 +157,14 @@ export const InventoryView: React.FC = () => {
       return;
     }
 
+    const currentFrom = prod.stocks[transferFromOutlet] || 0;
+    const currentTo = prod.stocks[transferToOutlet] || 0;
+
     // Deduct from source
     updateProductStock(
       prod.id,
       transferFromOutlet,
-      -transferQty,
-      'TRANSFER',
+      currentFrom - transferQty,
       `Mutasi keluar ke ${outlets.find((o) => o.id === transferToOutlet)?.name}`
     );
 
@@ -167,8 +172,7 @@ export const InventoryView: React.FC = () => {
     updateProductStock(
       prod.id,
       transferToOutlet,
-      transferQty,
-      'TRANSFER',
+      currentTo + transferQty,
       `Mutasi masuk dari ${outlets.find((o) => o.id === transferFromOutlet)?.name}`
     );
 
