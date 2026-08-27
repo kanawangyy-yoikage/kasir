@@ -15,7 +15,6 @@ import {
   Plus,
   Minus,
   Trash2,
-  Utensils,
   CreditCard,
   QrCode,
   Banknote,
@@ -50,8 +49,6 @@ export const PosTerminal: React.FC = () => {
     removeItem,
     updateItemNotes,
     clearCart,
-    tableNumber,
-    setTableNumber,
     orderNotes,
     customDiscount,
     setCustomDiscount,
@@ -216,7 +213,6 @@ export const PosTerminal: React.FC = () => {
       outletName: activeOutlet.name,
       cashierId: user.id,
       cashierName: user.name,
-      tableNumber: tableNumber || undefined,
       items: [...cart],
       subtotal,
       discountAmount: discountTotal,
@@ -507,23 +503,6 @@ export const PosTerminal: React.FC = () => {
           mobileTab === 'cart' ? 'flex' : 'hidden lg:flex'
         }`}
       >
-        {/* Customer & Order Header */}
-        <div className="p-3 sm:p-3.5 border-b border-[#e2ded6] dark:border-[#2e3542] space-y-2 bg-[#f7f6f2] dark:bg-[#181b20] shrink-0">
-          <div className="flex items-center gap-2">
-            {/* Table Number Input (F&B) */}
-            <div className="w-full relative">
-              <Utensils className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-[#70798a]" />
-              <input
-                type="text"
-                value={tableNumber}
-                onChange={(e) => setTableNumber(e.target.value)}
-                placeholder="No. Meja"
-                className="w-full h-10 pl-8 pr-2 text-xs font-bold bg-[#fcfbf8] dark:bg-[#20252e] border border-[#dcd7ce] dark:border-[#333b49] rounded-xl text-[#1a1d24] dark:text-[#f4f2ec] min-h-[40px]"
-              />
-            </div>
-          </div>
-        </div>
-
         {/* Cart Items List */}
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {cart.length === 0 ? (
@@ -840,13 +819,8 @@ export const PosTerminal: React.FC = () => {
                   className="p-3.5 rounded-2xl border border-[#e2ded6] dark:border-[#2e3542] flex items-center justify-between bg-[#fcfbf8] dark:bg-[#1c2026]"
                 >
                   <div>
-                    <div className="text-xs font-black text-[#1a1d24] dark:text-[#f4f2ec] flex items-center gap-2">
+                    <div className="text-xs font-black text-[#1a1d24] dark:text-[#f4f2ec]">
                       <span>{h.orderNumber}</span>
-                      {h.tableNumber && (
-                        <span className="text-[10px] bg-[#efece6] dark:bg-[#252b36] px-1.5 py-0.5 rounded-md font-bold">
-                          {h.tableNumber}
-                        </span>
-                      )}
                     </div>
                     <div className="text-[10px] text-[#70798a] mt-0.5">
                       {h.customerName || 'Pelanggan Umum'} | {h.items.length} item ({formatRupiah(holdTotal)})
@@ -1162,9 +1136,6 @@ export const PosTerminal: React.FC = () => {
                 <span>Kasir: {lastCompletedTransaction.cashierName}</span>
                 <span>{lastCompletedTransaction.payment.method}</span>
               </div>
-              {lastCompletedTransaction.tableNumber && (
-                <div>Meja: {lastCompletedTransaction.tableNumber}</div>
-              )}
             </div>
 
             {/* Items */}

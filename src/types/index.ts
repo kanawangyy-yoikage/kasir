@@ -82,7 +82,6 @@ export interface HeldOrder {
   id: string;
   orderNumber: string;
   customerName?: string;
-  tableNumber?: string;
   items: CartItem[];
   createdAt: string;
   note?: string;
@@ -97,7 +96,6 @@ export interface Transaction {
   cashierName: string;
   customerId?: string;
   customerName?: string;
-  tableNumber?: string;
   items: CartItem[];
   subtotal: number;
   discountAmount: number;

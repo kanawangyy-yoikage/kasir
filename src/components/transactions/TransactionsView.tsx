@@ -145,7 +145,7 @@ export const TransactionsView: React.FC = () => {
               <tr>
                 <th className="py-3.5 px-4">Invoice</th>
                 <th className="py-3.5 px-4">Waktu</th>
-                <th className="py-3.5 px-4">Kasir / Meja</th>
+                <th className="py-3.5 px-4">Kasir</th>
                 <th className="py-3.5 px-4">Pelanggan</th>
                 <th className="py-3.5 px-4">Metode Bayar</th>
                 <th className="py-3.5 px-4">Total</th>
@@ -162,9 +162,6 @@ export const TransactionsView: React.FC = () => {
                   <td className="py-3 px-4 text-slate-400">{formatDateTime(t.createdAt)}</td>
                   <td className="py-3 px-4">
                     <div className="font-bold text-slate-800 dark:text-slate-200">{t.cashierName}</div>
-                    {t.tableNumber && (
-                      <span className="text-[10px] text-slate-400">Meja: {t.tableNumber}</span>
-                    )}
                   </td>
                   <td className="py-3 px-4 text-slate-600 dark:text-slate-300 font-medium">
                     {t.customerName || 'Umum'}

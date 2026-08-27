@@ -12,8 +12,6 @@ interface CartContextType {
   updateItemDiscount: (itemId: string, discountType?: 'percent' | 'fixed', discountValue?: number) => void;
   clearCart: () => void;
 
-  tableNumber: string;
-  setTableNumber: (table: string) => void;
   orderNotes: string;
   setOrderNotes: (notes: string) => void;
 
@@ -40,7 +38,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { activeOutlet, soundEnabled, showToast } = useApp();
 
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [tableNumber, setTableNumber] = useState<string>('');
   const [orderNotes, setOrderNotes] = useState<string>('');
   const [customDiscount, setCustomDiscount] = useState<{ type: 'percent' | 'fixed'; value: number }>({
     type: 'percent',
@@ -149,7 +146,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     setCart([]);
-    setTableNumber('');
     setOrderNotes('');
     setCustomDiscount({ type: 'percent', value: 0 });
   };
@@ -164,7 +160,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const newHold: HeldOrder = {
       id: `hold_${Date.now()}`,
       orderNumber,
-      tableNumber,
       items: [...cart],
       createdAt: new Date().toISOString(),
       note: note || orderNotes,
@@ -178,7 +173,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const hold = heldOrders.find((h) => h.id === orderId);
     if (!hold) return;
     setCart(hold.items);
-    setTableNumber(hold.tableNumber || '');
     setOrderNotes(hold.note || '');
     setHeldOrders((prev) => prev.filter((h) => h.id !== orderId));
     showToast('success', `Pesanan ${hold.orderNumber} dibuka kembali.`);
@@ -229,8 +223,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateItemNotes,
         updateItemDiscount,
         clearCart,
-        tableNumber,
-        setTableNumber,
         orderNotes,
         setOrderNotes,
         customDiscount,
