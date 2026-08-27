@@ -70,8 +70,6 @@ export const PosTerminal: React.FC = () => {
     itemCount,
     subtotal,
     discountTotal,
-    taxTotal,
-    serviceFeeTotal,
     grandTotal,
     totalCost,
   } = useCart();
@@ -236,8 +234,6 @@ export const PosTerminal: React.FC = () => {
       subtotal,
       discountAmount: discountTotal,
       discountNote: appliedPromotion ? appliedPromotion.name : undefined,
-      taxAmount: taxTotal,
-      serviceFeeAmount: serviceFeeTotal,
       total: grandTotal,
       totalCost,
       grossProfit: grandTotal - totalCost,

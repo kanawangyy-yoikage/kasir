@@ -22,8 +22,6 @@ export const INITIAL_OUTLETS: Outlet[] = [
     address: '',
     phone: '',
     isMain: true,
-    taxRate: 0.11,
-    serviceFeeRate: 0.05,
   },
 ];
 
@@ -61,10 +59,6 @@ export const INITIAL_SETTINGS: StoreSettings = {
   phone: '',
   email: '',
   website: '',
-  taxEnabled: false,
-  taxRate: 0.11, // 11% PB1 / PPN (dinonaktifkan default — tidak ada pajak)
-  serviceFeeEnabled: false,
-  serviceFeeRate: 0.05, // 5% Service Charge (dinonaktifkan default — tidak ada biaya layanan)
   currency: 'IDR',
   receiptHeader: '',
   receiptFooter: '',

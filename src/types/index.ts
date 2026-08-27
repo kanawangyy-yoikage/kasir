@@ -18,8 +18,6 @@ export interface Outlet {
   address: string;
   phone: string;
   isMain: boolean;
-  taxRate: number; // e.g. 0.11 for 11%
-  serviceFeeRate: number;
 }
 
 export interface Category {
@@ -104,8 +102,6 @@ export interface Transaction {
   subtotal: number;
   discountAmount: number;
   discountNote?: string;
-  taxAmount: number;
-  serviceFeeAmount: number;
   total: number;
   totalCost: number; // Total HPP
   grossProfit: number; // total - totalCost
@@ -267,10 +263,6 @@ export interface StoreSettings {
   phone: string;
   email: string;
   website: string;
-  taxEnabled: boolean;
-  taxRate: number; // e.g. 0.11 for 11%
-  serviceFeeEnabled: boolean;
-  serviceFeeRate: number; // e.g. 0.05 for 5%
   currency: string;
   receiptHeader: string;
   receiptFooter: string;

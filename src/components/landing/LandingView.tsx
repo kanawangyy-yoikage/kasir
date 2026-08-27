@@ -234,7 +234,7 @@ export const LandingView: React.FC = () => {
                 Laporan Keuangan P&L
               </h3>
               <p className="text-xs text-[#5c6475] dark:text-[#9aa2b0] mt-1 leading-relaxed">
-                Laporan Laba Rugi komprehensif, HPP, margin kotor, pajak & service charge, dan ekspor spreadsheet CSV.
+                Laporan Laba Rugi komprehensif, HPP, margin kotor, dan ekspor spreadsheet CSV.
               </p>
             </div>
           </Card>

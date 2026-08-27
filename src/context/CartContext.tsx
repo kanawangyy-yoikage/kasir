@@ -36,8 +36,6 @@ interface CartContextType {
   itemCount: number;
   subtotal: number;
   discountTotal: number;
-  taxTotal: number;
-  serviceFeeTotal: number;
   grandTotal: number;
   totalCost: number;
 }
@@ -45,7 +43,7 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { activeOutlet, promotions, settings, soundEnabled, showToast } = useApp();
+  const { activeOutlet, promotions, soundEnabled, showToast } = useApp();
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -261,19 +259,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [rawSubtotal, appliedPromotion, customDiscount]);
 
   const subtotal = rawSubtotal;
-  const taxableAmount = Math.max(0, subtotal - discountTotal);
 
-  const taxTotal = useMemo(() => {
-    if (!settings.taxEnabled) return 0;
-    return Math.round(taxableAmount * (activeOutlet.taxRate || settings.taxRate || 0.11));
-  }, [taxableAmount, settings.taxEnabled, settings.taxRate, activeOutlet.taxRate]);
-
-  const serviceFeeTotal = useMemo(() => {
-    if (!settings.serviceFeeEnabled) return 0;
-    return Math.round(taxableAmount * (activeOutlet.serviceFeeRate || settings.serviceFeeRate || 0.05));
-  }, [taxableAmount, settings.serviceFeeEnabled, settings.serviceFeeRate, activeOutlet.serviceFeeRate]);
-
-  const grandTotal = Math.max(0, taxableAmount + taxTotal + serviceFeeTotal);
+  const grandTotal = Math.max(0, subtotal - discountTotal);
 
   return (
     <CartContext.Provider
@@ -303,8 +290,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         itemCount,
         subtotal,
         discountTotal,
-        taxTotal,
-        serviceFeeTotal,
         grandTotal,
         totalCost,
       }}
