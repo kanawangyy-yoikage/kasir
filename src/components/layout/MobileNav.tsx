@@ -9,28 +9,22 @@ import {
   Menu,
   X,
   Boxes,
-  Clock,
-  Users,
   BarChart3,
-  ClipboardList,
-  Store,
-  Tag,
   ShieldCheck,
   Settings,
   Sparkles,
 } from 'lucide-react';
-import { AppView, Role } from '@/types';
+import { AppView } from '@/types';
 
 interface MenuModule {
   id: AppView;
   label: string;
   category: string;
   icon: React.ComponentType<{ className?: string }>;
-  allowedRoles: Role[];
 }
 
 export const MobileNav: React.FC = () => {
-  const { currentView, setCurrentView, user, products } = useApp();
+  const { currentView, setCurrentView, products } = useApp();
   const { cart } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -44,24 +38,18 @@ export const MobileNav: React.FC = () => {
   ];
 
   const allModules: MenuModule[] = [
-    { id: 'landing', label: 'Ringkasan / Home', category: 'Umum', icon: Sparkles, allowedRoles: ['OWNER', 'MANAGER', 'CASHIER', 'STAFF_INVENTORY'] },
-    { id: 'pos', label: 'Terminal POS Kasir', category: 'Penjualan', icon: ShoppingCart, allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'] },
-    { id: 'transactions', label: 'Riwayat Transaksi', category: 'Penjualan', icon: Receipt, allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'] },
-    { id: 'shifts', label: 'Shift & Kas Laci', category: 'Penjualan', icon: Clock, allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'] },
-    { id: 'customers', label: 'Pelanggan & CRM Member', category: 'Penjualan', icon: Users, allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'] },
-    { id: 'promotions', label: 'Promo & Voucher', category: 'Penjualan', icon: Tag, allowedRoles: ['OWNER', 'MANAGER'] },
-    { id: 'products', label: 'Master Produk & SKU', category: 'Inventori', icon: Package, allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'] },
-    { id: 'inventory', label: 'Stok Opname & Mutasi', category: 'Inventori', icon: Boxes, allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'] },
-    { id: 'purchases', label: 'Purchase Order (PO)', category: 'Inventori', icon: ClipboardList, allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'] },
-    { id: 'suppliers', label: 'Pemasok / Vendor', category: 'Inventori', icon: Store, allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'] },
-    { id: 'dashboard', label: 'Dashboard Analitik', category: 'Laporan & Keuangan', icon: LayoutDashboard, allowedRoles: ['OWNER', 'MANAGER'] },
-    { id: 'reports', label: 'Laporan Laba Rugi (P&L)', category: 'Laporan & Keuangan', icon: BarChart3, allowedRoles: ['OWNER', 'MANAGER'] },
-    { id: 'employees', label: 'Kelola Karyawan (RBAC)', category: 'Pengaturan & Toko', icon: Users, allowedRoles: ['OWNER', 'MANAGER'] },
-    { id: 'audit', label: 'Audit Log Keamanan', category: 'Pengaturan & Toko', icon: ShieldCheck, allowedRoles: ['OWNER'] },
-    { id: 'settings', label: 'Pengaturan Toko & Printer', category: 'Pengaturan & Toko', icon: Settings, allowedRoles: ['OWNER', 'MANAGER'] },
+    { id: 'landing', label: 'Ringkasan / Home', category: 'Umum', icon: Sparkles },
+    { id: 'pos', label: 'Terminal POS Kasir', category: 'Penjualan', icon: ShoppingCart },
+    { id: 'transactions', label: 'Riwayat Transaksi', category: 'Penjualan', icon: Receipt },
+    { id: 'products', label: 'Master Produk & SKU', category: 'Inventori', icon: Package },
+    { id: 'inventory', label: 'Stok Opname & Mutasi', category: 'Inventori', icon: Boxes },
+    { id: 'dashboard', label: 'Dashboard Analitik', category: 'Laporan & Keuangan', icon: LayoutDashboard },
+    { id: 'reports', label: 'Laporan Laba Rugi (P&L)', category: 'Laporan & Keuangan', icon: BarChart3 },
+    { id: 'audit', label: 'Audit Log Keamanan', category: 'Pengaturan & Toko', icon: ShieldCheck },
+    { id: 'settings', label: 'Pengaturan Toko & Printer', category: 'Pengaturan & Toko', icon: Settings },
   ];
 
-  const allowedModules = allModules.filter((m) => m.allowedRoles.includes(user.role));
+  const allowedModules = allModules;
 
   const handleSelectModule = (viewId: AppView) => {
     setCurrentView(viewId);
@@ -133,9 +121,6 @@ export const MobileNav: React.FC = () => {
                 <h3 className="text-sm font-black text-[#1a1d24] dark:text-[#f4f2ec]">
                   Semua Modul My Kasir Gweh ERP
                 </h3>
-                <p className="text-[11px] text-[#6c7585] dark:text-[#9aa2b0]">
-                  Peran: {user.role}
-                </p>
               </div>
               <button
                 onClick={() => setIsMenuOpen(false)}

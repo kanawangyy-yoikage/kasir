@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export const ReportsView: React.FC = () => {
-  const { transactions, shifts, activeOutlet, showToast } = useApp();
+  const { transactions, activeOutlet, showToast } = useApp();
 
   const [datePeriod, setDatePeriod] = useState<'thisMonth' | 'lastMonth' | 'allTime'>('thisMonth');
 
@@ -34,11 +34,6 @@ export const ReportsView: React.FC = () => {
   const totalCOGS = validTransactions.reduce((s, t) => s + t.totalCost, 0);
   const grossProfit = netSales - totalCOGS;
 
-  // Operating Expenses from Petty cash out
-  const operationalExpenses = shifts.reduce((s, sh) => s + sh.cashOutExpenses, 0);
-
-  const netOperatingProfit = grossProfit - operationalExpenses;
-
   const handleExportCSV = () => {
     const data = [
       ['LAPORAN LABA RUGI (PROFIT & LOSS STATEMENT)'],
@@ -51,8 +46,6 @@ export const ReportsView: React.FC = () => {
       ['Penjualan Bersih (Net Sales)', netSales],
       ['Harga Pokok Penjualan (HPP / COGS)', -totalCOGS],
       ['LABA KOTOR (GROSS PROFIT)', grossProfit],
-      ['Biaya Operasional Toko (Petty Cash)', -operationalExpenses],
-      ['LABA BERSIH OPERASIONAL (NET PROFIT)', netOperatingProfit],
     ];
 
     const csvContent =
@@ -111,14 +104,6 @@ export const ReportsView: React.FC = () => {
             Margin: <strong>{netSales > 0 ? ((grossProfit / netSales) * 100).toFixed(1) : 0}%</strong>
           </p>
         </Card>
-
-        <Card className="p-5 space-y-2">
-          <span className="text-xs font-bold text-slate-500 uppercase">Laba Bersih Operasional</span>
-          <h3 className="text-2xl font-black text-blue-600 dark:text-blue-400">
-            {formatRupiah(netOperatingProfit)}
-          </h3>
-          <p className="text-[11px] text-slate-400">Setelah dikurangi biaya operasional petty cash</p>
-        </Card>
       </div>
 
       {/* Comprehensive Income Statement Breakdown */}
@@ -162,21 +147,6 @@ export const ReportsView: React.FC = () => {
             <div className="flex justify-between pl-4 pt-1 font-bold text-emerald-600 border-t border-slate-100 dark:border-slate-800">
               <span>LABA KOTOR (GROSS PROFIT)</span>
               <span>{formatRupiah(grossProfit)}</span>
-            </div>
-          </div>
-
-          {/* Operating Expenses */}
-          <div className="py-3 space-y-1.5">
-            <div className="font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider text-[11px]">
-              3. BIAYA OPERASIONAL (EXPENSES)
-            </div>
-            <div className="flex justify-between pl-4 text-rose-500">
-              <span>Petty Cash & Biaya Operasional Kasir</span>
-              <span>- {formatRupiah(operationalExpenses)}</span>
-            </div>
-            <div className="flex justify-between pl-4 pt-1 font-black text-sm text-blue-600 dark:text-blue-400 border-t border-slate-100 dark:border-slate-800">
-              <span>LABA BERSIH OPERASIONAL (NET PROFIT)</span>
-              <span>{formatRupiah(netOperatingProfit)}</span>
             </div>
           </div>
         </div>

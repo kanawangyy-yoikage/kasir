@@ -7,16 +7,10 @@ import {
   LayoutDashboard,
   Package,
   Boxes,
-  Users,
   BarChart3,
   ArrowRight,
   Sparkles,
   Receipt,
-  Clock,
-  ClipboardList,
-  Store,
-  Tag,
-  Settings,
 } from 'lucide-react';
 
 export const LandingView: React.FC = () => {
@@ -37,7 +31,7 @@ export const LandingView: React.FC = () => {
           </h1>
 
           <p className="text-xs sm:text-sm text-[#b8c0cf] max-w-2xl leading-relaxed">
-            Solusi kasir lengkap untuk F&B, Retail, dan Jasa. Dilengkapi transaksi kilat POS, barcode scanner, multi-outlet, kontrol stok opname, laporan laba rugi (P&L), cetak struk thermal, kas laci / shift kasir, dan program loyalitas CRM.
+            Solusi kasir lengkap untuk F&B, Retail, dan Jasa. Dilengkapi transaksi kilat POS, barcode scanner, multi-outlet, kontrol stok opname, laporan laba rugi (P&L), dan cetak struk thermal.
           </p>
 
           <div className="flex flex-wrap items-center gap-2.5 pt-1 sm:pt-2">
@@ -172,48 +166,6 @@ export const LandingView: React.FC = () => {
               </h3>
               <p className="text-xs text-[#5c6475] dark:text-[#9aa2b0] mt-1 leading-relaxed">
                 Daftar lengkap invoice transaksi, cetak ulang struk thermal, filter metode bayar, dan refund/void.
-              </p>
-            </div>
-          </Card>
-
-          {/* Shifts & Cash Drawer */}
-          <Card
-            onClick={() => setCurrentView('shifts')}
-            className="p-4 sm:p-5 cursor-pointer hover:border-[#8d96a6] hover:shadow-md transition-all space-y-2.5 group active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl sm:rounded-2xl bg-[#1f232b] text-[#f7f6f2] dark:bg-[#f5f4ef] dark:text-[#181b21] group-hover:scale-105 transition-transform">
-                <Clock className="h-5 w-5" />
-              </div>
-              <ArrowRight className="h-4 w-4 text-[#70798a] group-hover:text-[#1a1d24] dark:group-hover:text-[#f4f2ec] transition-colors" />
-            </div>
-            <div>
-              <h3 className="text-sm font-black text-[#1a1d24] dark:text-[#f4f2ec]">
-                Shift Kasir & Kas Laci
-              </h3>
-              <p className="text-xs text-[#5c6475] dark:text-[#9aa2b0] mt-1 leading-relaxed">
-                Modal awal kasir, pencatatan kas masuk/keluar petty cash, dan perhitungan selisih tutup shift.
-              </p>
-            </div>
-          </Card>
-
-          {/* Customers CRM */}
-          <Card
-            onClick={() => setCurrentView('customers')}
-            className="p-4 sm:p-5 cursor-pointer hover:border-[#8d96a6] hover:shadow-md transition-all space-y-2.5 group active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl sm:rounded-2xl bg-[#1f232b] text-[#f7f6f2] dark:bg-[#f5f4ef] dark:text-[#181b21] group-hover:scale-105 transition-transform">
-                <Users className="h-5 w-5" />
-              </div>
-              <ArrowRight className="h-4 w-4 text-[#70798a] group-hover:text-[#1a1d24] dark:group-hover:text-[#f4f2ec] transition-colors" />
-            </div>
-            <div>
-              <h3 className="text-sm font-black text-[#1a1d24] dark:text-[#f4f2ec]">
-                Pelanggan & CRM Member
-              </h3>
-              <p className="text-xs text-[#5c6475] dark:text-[#9aa2b0] mt-1 leading-relaxed">
-                Tier member (Bronze-Platinum), poin loyalitas, riwayat belanja, dan pencatatan kasbon/hutang.
               </p>
             </div>
           </Card>

@@ -2,16 +2,10 @@ import {
   Outlet,
   Category,
   Product,
-  Supplier,
-  PurchaseOrder,
-  Customer,
-  Shift,
-  Promotion,
   Transaction,
   User,
   StoreSettings,
   AuditLog,
-  Expense,
 } from '@/types';
 
 export const INITIAL_OUTLETS: Outlet[] = [
@@ -40,16 +34,6 @@ export const INITIAL_CATEGORIES: Category[] = [];
 
 export const INITIAL_PRODUCTS: Product[] = [];
 
-export const INITIAL_CUSTOMERS: Customer[] = [];
-
-export const INITIAL_SUPPLIERS: Supplier[] = [];
-
-export const INITIAL_PROMOTIONS: Promotion[] = [];
-
-export const INITIAL_SHIFTS: Shift[] = [];
-
-export const INITIAL_PURCHASE_ORDERS: PurchaseOrder[] = [];
-
 export const INITIAL_TRANSACTIONS: Transaction[] = [];
 
 export const INITIAL_SETTINGS: StoreSettings = {
@@ -70,5 +54,3 @@ export const INITIAL_SETTINGS: StoreSettings = {
 };
 
 export const INITIAL_AUDIT_LOGS: AuditLog[] = [];
-
-export const INITIAL_EXPENSES: Expense[] = [];

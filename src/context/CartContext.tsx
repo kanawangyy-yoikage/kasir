@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useMemo } from 'react';
-import { CartItem, Customer, HeldOrder, Product, ProductVariant, Promotion } from '@/types';
+import { CartItem, HeldOrder, Product, ProductVariant } from '@/types';
 import { useApp } from '@/context/AppContext';
 import { playSound } from '@/utils/formatters';
 
@@ -12,16 +12,10 @@ interface CartContextType {
   updateItemDiscount: (itemId: string, discountType?: 'percent' | 'fixed', discountValue?: number) => void;
   clearCart: () => void;
 
-  selectedCustomer: Customer | null;
-  setSelectedCustomer: (cust: Customer | null) => void;
   tableNumber: string;
   setTableNumber: (table: string) => void;
   orderNotes: string;
   setOrderNotes: (notes: string) => void;
-
-  appliedPromotion: Promotion | null;
-  applyPromotion: (code: string) => boolean;
-  removePromotion: () => void;
 
   customDiscount: { type: 'percent' | 'fixed'; value: number };
   setCustomDiscount: (disc: { type: 'percent' | 'fixed'; value: number }) => void;
@@ -43,13 +37,11 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { activeOutlet, promotions, soundEnabled, showToast } = useApp();
+  const { activeOutlet, soundEnabled, showToast } = useApp();
 
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [tableNumber, setTableNumber] = useState<string>('');
   const [orderNotes, setOrderNotes] = useState<string>('');
-  const [appliedPromotion, setAppliedPromotion] = useState<Promotion | null>(null);
   const [customDiscount, setCustomDiscount] = useState<{ type: 'percent' | 'fixed'; value: number }>({
     type: 'percent',
     value: 0,
@@ -157,32 +149,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     setCart([]);
-    setSelectedCustomer(null);
     setTableNumber('');
     setOrderNotes('');
-    setAppliedPromotion(null);
     setCustomDiscount({ type: 'percent', value: 0 });
-  };
-
-  const applyPromotion = (code: string): boolean => {
-    const promo = promotions.find(
-      (p) => p.code.toUpperCase() === code.trim().toUpperCase() && p.isActive
-    );
-    if (!promo) {
-      showToast('error', 'Kode voucher tidak valid atau sudah kedaluwarsa!');
-      return false;
-    }
-    if (subtotal < promo.minPurchase) {
-      showToast('warning', `Minimal belanja untuk voucher ini adalah Rp ${promo.minPurchase.toLocaleString('id-ID')}`);
-      return false;
-    }
-    setAppliedPromotion(promo);
-    showToast('success', `Voucher ${promo.name} berhasil dipasang!`);
-    return true;
-  };
-
-  const removePromotion = () => {
-    setAppliedPromotion(null);
   };
 
   // Held Orders
@@ -195,7 +164,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const newHold: HeldOrder = {
       id: `hold_${Date.now()}`,
       orderNumber,
-      customerName: selectedCustomer?.name,
       tableNumber,
       items: [...cart],
       createdAt: new Date().toISOString(),
@@ -236,18 +204,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const discountTotal = useMemo(() => {
     let disc = 0;
-    // 1. Promo code
-    if (appliedPromotion) {
-      if (appliedPromotion.type === 'PERCENTAGE') {
-        const calculated = (rawSubtotal * appliedPromotion.value) / 100;
-        disc += appliedPromotion.maxDiscount
-          ? Math.min(calculated, appliedPromotion.maxDiscount)
-          : calculated;
-      } else if (appliedPromotion.type === 'FIXED_AMOUNT') {
-        disc += appliedPromotion.value;
-      }
-    }
-    // 2. Custom discount
+    // Custom discount
     if (customDiscount.value > 0) {
       if (customDiscount.type === 'percent') {
         disc += (rawSubtotal * customDiscount.value) / 100;
@@ -256,7 +213,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     return Math.min(rawSubtotal, disc);
-  }, [rawSubtotal, appliedPromotion, customDiscount]);
+  }, [rawSubtotal, customDiscount]);
 
   const subtotal = rawSubtotal;
 
@@ -272,15 +229,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updateItemNotes,
         updateItemDiscount,
         clearCart,
-        selectedCustomer,
-        setSelectedCustomer,
         tableNumber,
         setTableNumber,
         orderNotes,
         setOrderNotes,
-        appliedPromotion,
-        applyPromotion,
-        removePromotion,
         customDiscount,
         setCustomDiscount,
         heldOrders,

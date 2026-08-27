@@ -3,18 +3,12 @@ import {
   AppView,
   AuditLog,
   Category,
-  Customer,
-  Expense,
   Outlet,
   Product,
-  Promotion,
-  PurchaseOrder,
   Role,
-  Shift,
   StockMutation,
   StockOpname,
   StoreSettings,
-  Supplier,
   ToastMessage,
   Transaction,
   User,
@@ -22,15 +16,9 @@ import {
 import {
   INITIAL_AUDIT_LOGS,
   INITIAL_CATEGORIES,
-  INITIAL_CUSTOMERS,
-  INITIAL_EXPENSES,
   INITIAL_OUTLETS,
   INITIAL_PRODUCTS,
-  INITIAL_PROMOTIONS,
-  INITIAL_PURCHASE_ORDERS,
   INITIAL_SETTINGS,
-  INITIAL_SHIFTS,
-  INITIAL_SUPPLIERS,
   INITIAL_TRANSACTIONS,
   INITIAL_USERS,
 } from '@/data/initialData';
@@ -41,15 +29,6 @@ interface AppContextType {
   currentView: AppView;
   setCurrentView: (view: AppView) => void;
   user: User;
-  users: User[];
-  employees: User[];
-  loginAs: (role: Role) => void;
-  addUser: (user: Omit<User, 'id'>) => void;
-  updateUser: (id: string, user: Partial<User>) => void;
-  deleteUser: (id: string) => void;
-  addEmployee: (user: Omit<User, 'id'>) => void;
-  updateEmployee: (id: string, user: Partial<User>) => void;
-  deleteEmployee: (id: string) => void;
 
   // Outlets
   outlets: Outlet[];
@@ -82,40 +61,6 @@ interface AppContextType {
   refundTransaction: (id: string, reason: string) => void;
   voidTransaction: (id: string, reason: string) => void;
 
-  // Shifts & Cash Register
-  currentShift: Shift | null;
-  shifts: Shift[];
-  openShift: (startingCash: number, notes?: string) => void;
-  startShift: (startingCash: number, notes?: string) => void;
-  closeShift: (actualEndingCash: number, notes?: string) => void;
-  endShift: (actualEndingCash: number, notes?: string) => void;
-  recordCashMovement: (type: 'IN' | 'OUT', amount: number, reason: string) => void;
-  expenses: Expense[];
-  addExpense: (expense: Omit<Expense, 'id' | 'shiftId' | 'date' | 'actorName'>) => void;
-
-  // Customers & CRM
-  customers: Customer[];
-  addCustomer: (customer: Omit<Customer, 'id' | 'points' | 'totalSpent' | 'totalVisits' | 'debtBalance'>) => void;
-  updateCustomer: (id: string, data: Partial<Customer>) => void;
-  deleteCustomer: (id: string) => void;
-  payCustomerDebt: (customerId: string, amount: number) => void;
-
-  // Suppliers & PO
-  suppliers: Supplier[];
-  addSupplier: (supplier: Omit<Supplier, 'id'>) => void;
-  updateSupplier: (id: string, supplier: Partial<Supplier>) => void;
-  deleteSupplier: (id: string) => void;
-  purchaseOrders: PurchaseOrder[];
-  createPurchaseOrder: (po: Omit<PurchaseOrder, 'id' | 'poNumber'>) => void;
-  receivePurchaseOrder: (id: string) => void;
-
-  // Promotions & Discounts
-  promotions: Promotion[];
-  addPromotion: (promo: Omit<Promotion, 'id' | 'usageCount'>) => void;
-  updatePromotion: (id: string, promo: Partial<Promotion>) => void;
-  deletePromotion: (id: string) => void;
-  togglePromotion: (id: string) => void;
-
   // Settings & Audit
   settings: StoreSettings;
   updateSettings: (newSettings: Partial<StoreSettings>) => void;
@@ -142,11 +87,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentView, setCurrentView] = useState<AppView>('landing');
-  const [users, setUsers] = useState<User[]>(() => {
-    const saved = localStorage.getItem('kasirku_users');
-    return saved ? JSON.parse(saved) : INITIAL_USERS;
-  });
-  const [user, setUser] = useState<User>(() => users[0] || INITIAL_USERS[0]); // Default Owner
+  const [user, setUser] = useState<User>(() => INITIAL_USERS[0]); // Single Owner
   const [outlets, setOutlets] = useState<Outlet[]>(() => {
     const saved = localStorage.getItem('kasirku_outlets');
     return saved ? JSON.parse(saved) : INITIAL_OUTLETS;
@@ -164,39 +105,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : INITIAL_CATEGORIES;
   });
 
-  const [customers, setCustomers] = useState<Customer[]>(() => {
-    const saved = localStorage.getItem('kasirku_customers');
-    return saved ? JSON.parse(saved) : INITIAL_CUSTOMERS;
-  });
-
-  const [suppliers, setSuppliers] = useState<Supplier[]>(() => {
-    const saved = localStorage.getItem('kasirku_suppliers');
-    return saved ? JSON.parse(saved) : INITIAL_SUPPLIERS;
-  });
-
-  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(() => {
-    const saved = localStorage.getItem('kasirku_pos');
-    return saved ? JSON.parse(saved) : INITIAL_PURCHASE_ORDERS;
-  });
-
-  const [promotions, setPromotions] = useState<Promotion[]>(() => {
-    const saved = localStorage.getItem('kasirku_promos');
-    return saved ? JSON.parse(saved) : INITIAL_PROMOTIONS;
-  });
-
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
     const saved = localStorage.getItem('kasirku_transactions');
     return saved ? JSON.parse(saved) : INITIAL_TRANSACTIONS;
-  });
-
-  const [shifts, setShifts] = useState<Shift[]>(() => {
-    const saved = localStorage.getItem('kasirku_shifts');
-    return saved ? JSON.parse(saved) : INITIAL_SHIFTS;
-  });
-
-  const [expenses, setExpenses] = useState<Expense[]>(() => {
-    const saved = localStorage.getItem('kasirku_expenses');
-    return saved ? JSON.parse(saved) : INITIAL_EXPENSES;
   });
 
   const [stockOpnames, setStockOpnames] = useState<StockOpname[]>(() => {
@@ -225,10 +136,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Sync to localStorage
   useEffect(() => {
-    localStorage.setItem('kasirku_users', JSON.stringify(users));
-  }, [users]);
-
-  useEffect(() => {
     localStorage.setItem('kasirku_outlets', JSON.stringify(outlets));
   }, [outlets]);
 
@@ -237,32 +144,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [categories]);
 
   useEffect(() => {
-    localStorage.setItem('kasirku_suppliers', JSON.stringify(suppliers));
-  }, [suppliers]);
-
-  useEffect(() => {
-    localStorage.setItem('kasirku_promos', JSON.stringify(promotions));
-  }, [promotions]);
-
-  useEffect(() => {
     localStorage.setItem('kasirku_products', JSON.stringify(products));
   }, [products]);
 
   useEffect(() => {
     localStorage.setItem('kasirku_transactions', JSON.stringify(transactions));
   }, [transactions]);
-
-  useEffect(() => {
-    localStorage.setItem('kasirku_customers', JSON.stringify(customers));
-  }, [customers]);
-
-  useEffect(() => {
-    localStorage.setItem('kasirku_shifts', JSON.stringify(shifts));
-  }, [shifts]);
-
-  useEffect(() => {
-    localStorage.setItem('kasirku_expenses', JSON.stringify(expenses));
-  }, [expenses]);
 
   useEffect(() => {
     localStorage.setItem('kasirku_settings', JSON.stringify(settings));
@@ -329,13 +216,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       details,
     };
     setAuditLogs((prev) => [log, ...prev]);
-  };
-
-  const loginAs = (role: Role) => {
-    const found = users.find((u) => u.role === role) || users[0];
-    setUser(found);
-    addAuditLog('ROLE_SWITCH', 'AUTH', `Beralih peran menjadi ${found.name} (${role})`);
-    showToast('success', `Berhasil masuk sebagai ${found.name} (${role})`);
   };
 
   // Products CRUD
@@ -528,52 +408,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       );
     });
 
-    // Update customer points & visits if customer selected
-    if (newTrx.customerId) {
-      const earnedPoints = Math.floor(newTrx.total / (settings.pointsPerRupiah || 10000));
-      setCustomers((prev) =>
-        prev.map((c) => {
-          if (c.id === newTrx.customerId) {
-            const newSpent = c.totalSpent + newTrx.total;
-            let tier: Customer['tier'] = 'BRONZE';
-            if (newSpent >= 4000000) tier = 'PLATINUM';
-            else if (newSpent >= 2000000) tier = 'GOLD';
-            else if (newSpent >= 800000) tier = 'SILVER';
-
-            return {
-              ...c,
-              points: c.points + earnedPoints,
-              totalSpent: newSpent,
-              totalVisits: c.totalVisits + 1,
-              tier,
-              lastVisit: new Date().toISOString(),
-              debtBalance:
-                newTrx.payment.method === 'HUTANG_KASBON'
-                  ? c.debtBalance + newTrx.total
-                  : c.debtBalance,
-            };
-          }
-          return c;
-        })
-      );
-    }
-
-    // Update current shift totals
-    setShifts((prev) =>
-      prev.map((s) => {
-        if (s.status === 'OPEN' && s.outletId === newTrx.outletId) {
-          const isCash = newTrx.payment.method === 'CASH';
-          return {
-            ...s,
-            totalSales: s.totalSales + newTrx.total,
-            totalCashSales: isCash ? s.totalCashSales + newTrx.total : s.totalCashSales,
-            totalNonCashSales: !isCash ? s.totalNonCashSales + newTrx.total : s.totalNonCashSales,
-          };
-        }
-        return s;
-      })
-    );
-
     addAuditLog('TRANSACTION', 'POS', `Transaksi ${newTrx.invoiceNumber} senilai ${newTrx.total} (${newTrx.payment.method})`);
     return newTrx;
   };
@@ -602,174 +436,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
     addAuditLog('VOID_TRANSACTION', 'POS', `Void transaksi ID ${id}: ${reason}`);
     showToast('warning', 'Transaksi telah di-void / dibatalkan.');
-  };
-
-  // Shifts
-  const currentShift = shifts.find((s) => s.status === 'OPEN' && s.outletId === activeOutlet.id) || null;
-
-  const openShift = (startingCash: number, notes?: string) => {
-    const newShift: Shift = {
-      id: `shf_${Date.now()}`,
-      cashierId: user.id,
-      cashierName: user.name,
-      outletId: activeOutlet.id,
-      startTime: new Date().toISOString(),
-      startingCash,
-      totalCashSales: 0,
-      totalNonCashSales: 0,
-      totalSales: 0,
-      cashInExpenses: 0,
-      cashOutExpenses: 0,
-      status: 'OPEN',
-      notes,
-    };
-    setShifts((prev) => [newShift, ...prev]);
-    addAuditLog('OPEN_SHIFT', 'SHIFTS', `Membuka shift kasir modal awal Rp ${startingCash}`);
-    showToast('success', `Shift kasir berhasil dibuka dengan modal Rp ${startingCash.toLocaleString('id-ID')}`);
-  };
-
-  const closeShift = (actualEndingCash: number, notes?: string) => {
-    if (!currentShift) return;
-    const expectedEndingCash =
-      currentShift.startingCash +
-      currentShift.totalCashSales +
-      currentShift.cashInExpenses -
-      currentShift.cashOutExpenses;
-
-    const cashDifference = actualEndingCash - expectedEndingCash;
-
-    setShifts((prev) =>
-      prev.map((s) => {
-        if (s.id === currentShift.id) {
-          return {
-            ...s,
-            endTime: new Date().toISOString(),
-            expectedEndingCash,
-            actualEndingCash,
-            cashDifference,
-            status: 'CLOSED',
-            notes: notes || s.notes,
-          };
-        }
-        return s;
-      })
-    );
-
-    addAuditLog(
-      'CLOSE_SHIFT',
-      'SHIFTS',
-      `Tutup shift: Fisik Rp ${actualEndingCash}, Sistem Rp ${expectedEndingCash}, Selisih Rp ${cashDifference}`
-    );
-    showToast('success', 'Shift kasir berhasil ditutup dan laporan dicatat!');
-  };
-
-  const startShift = openShift;
-  const endShift = closeShift;
-
-  const recordCashMovement = (type: 'IN' | 'OUT', amount: number, reason: string) => {
-    if (!currentShift) {
-      showToast('error', 'Tidak ada shift kasir yang sedang aktif!');
-      return;
-    }
-
-    setShifts((prev) =>
-      prev.map((s) => {
-        if (s.id === currentShift.id) {
-          return {
-            ...s,
-            cashInExpenses: type === 'IN' ? (s.cashInExpenses || 0) + amount : s.cashInExpenses,
-            cashOutExpenses: type === 'OUT' ? (s.cashOutExpenses || 0) + amount : s.cashOutExpenses,
-          };
-        }
-        return s;
-      })
-    );
-
-    const newExp: Expense = {
-      id: `exp_${Date.now()}`,
-      shiftId: currentShift.id,
-      outletId: activeOutlet.id,
-      category: type === 'OUT' ? 'OPERASIONAL' : 'LAINNYA',
-      amount,
-      description: `[Petty Cash ${type === 'IN' ? 'Masuk' : 'Keluar'}] ${reason}`,
-      date: new Date().toISOString(),
-      actorName: user.name,
-    };
-    setExpenses((prev) => [newExp, ...prev]);
-
-    addAuditLog('CASH_MOVEMENT', 'SHIFTS', `Kas ${type === 'IN' ? 'Masuk' : 'Keluar'} Rp ${amount}: ${reason}`);
-  };
-
-  const addExpense = (expData: Omit<Expense, 'id' | 'shiftId' | 'date' | 'actorName'>) => {
-    const newExp: Expense = {
-      ...expData,
-      id: `exp_${Date.now()}`,
-      shiftId: currentShift?.id,
-      date: new Date().toISOString(),
-      actorName: user.name,
-    };
-    setExpenses((prev) => [newExp, ...prev]);
-
-    // deduct from shift cash
-    if (currentShift) {
-      setShifts((prev) =>
-        prev.map((s) => {
-          if (s.id === currentShift.id) {
-            return {
-              ...s,
-              cashOutExpenses: s.cashOutExpenses + newExp.amount,
-            };
-          }
-          return s;
-        })
-      );
-    }
-
-    addAuditLog('EXPENSE', 'FINANCE', `Pengeluaran kas Rp ${newExp.amount} (${newExp.description})`);
-    showToast('info', `Pengeluaran Rp ${newExp.amount.toLocaleString('id-ID')} dicatat`);
-  };
-
-  // Customers
-  const addCustomer = (custData: Omit<Customer, 'id' | 'points' | 'totalSpent' | 'totalVisits' | 'debtBalance'>) => {
-    const id = `cust_${Date.now()}`;
-    const newCust: Customer = {
-      ...custData,
-      id,
-      points: 0,
-      totalSpent: 0,
-      totalVisits: 0,
-      debtBalance: 0,
-      lastVisit: new Date().toISOString(),
-    };
-    setCustomers((prev) => [newCust, ...prev]);
-    addAuditLog('CREATE_CUSTOMER', 'CRM', `Mendaftarkan member baru: ${newCust.name} (${newCust.phone})`);
-    showToast('success', `Member ${newCust.name} berhasil didaftarkan!`);
-  };
-
-  const updateCustomer = (id: string, data: Partial<Customer>) => {
-    setCustomers((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, ...data } : c))
-    );
-    showToast('success', 'Data pelanggan berhasil diperbarui!');
-  };
-
-  const deleteCustomer = (id: string) => {
-    setCustomers((prev) => prev.filter((c) => c.id !== id));
-    showToast('info', 'Data pelanggan telah dihapus.');
-  };
-
-  const payCustomerDebt = (customerId: string, amount: number) => {
-    setCustomers((prev) =>
-      prev.map((c) => {
-        if (c.id === customerId) {
-          const newDebt = Math.max(0, c.debtBalance - amount);
-          return { ...c, debtBalance: newDebt };
-        }
-        return c;
-      })
-    );
-    addAuditLog('PAY_DEBT', 'CRM', `Pelunasan kasbon member ${customerId} sebesar Rp ${amount}`);
-    showToast('success', `Pelunasan hutang/kasbon Rp ${amount.toLocaleString('id-ID')} berhasil dicatat!`);
   };
 
   // Outlets CRUD
@@ -814,42 +480,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('info', 'Cabang outlet telah dihapus.');
   };
 
-  // Users / Employees CRUD
-  const addUser = (userData: Omit<User, 'id'>) => {
-    const newUser: User = {
-      ...userData,
-      id: `usr_${Date.now()}`,
-    };
-    setUsers((prev) => [...prev, newUser]);
-    addAuditLog('CREATE_USER', 'USERS', `Tambah user/karyawan: ${newUser.name} (${newUser.role})`);
-    showToast('success', `Akun ${newUser.name} berhasil ditambahkan!`);
-  };
-
-  const updateUser = (id: string, data: Partial<User>) => {
-    setUsers((prev) =>
-      prev.map((u) => {
-        if (u.id === id) {
-          const updated = { ...u, ...data };
-          if (user.id === id) {
-            setUser(updated);
-          }
-          return updated;
-        }
-        return u;
-      })
-    );
-    showToast('success', 'Data pengguna berhasil diperbarui!');
-  };
-
-  const deleteUser = (id: string) => {
-    if (users.length <= 1) {
-      showToast('error', 'Tidak dapat menghapus user utama!');
-      return;
-    }
-    setUsers((prev) => prev.filter((u) => u.id !== id));
-    showToast('info', 'Pengguna telah dihapus.');
-  };
-
   // Category CRUD
   const updateCategory = (id: string, name: string) => {
     setCategories((prev) =>
@@ -861,93 +491,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const deleteCategory = (id: string) => {
     setCategories((prev) => prev.filter((c) => c.id !== id));
     showToast('info', 'Kategori produk dihapus.');
-  };
-
-  // Suppliers & PO
-  const addSupplier = (supData: Omit<Supplier, 'id'>) => {
-    const newSup: Supplier = { ...supData, id: `sup_${Date.now()}` };
-    setSuppliers((prev) => [...prev, newSup]);
-    showToast('success', `Supplier ${newSup.name} ditambahkan!`);
-  };
-
-  const updateSupplier = (id: string, data: Partial<Supplier>) => {
-    setSuppliers((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...data } : s))
-    );
-    showToast('success', 'Data supplier berhasil diperbarui!');
-  };
-
-  const deleteSupplier = (id: string) => {
-    setSuppliers((prev) => prev.filter((s) => s.id !== id));
-    showToast('info', 'Supplier berhasil dihapus.');
-  };
-
-  const createPurchaseOrder = (poData: Omit<PurchaseOrder, 'id' | 'poNumber'>) => {
-    const poNumber = `PO-${new Date().getFullYear()}-${String(purchaseOrders.length + 1).padStart(3, '0')}`;
-    const newPO: PurchaseOrder = {
-      ...poData,
-      id: `po_${Date.now()}`,
-      poNumber,
-    };
-    setPurchaseOrders((prev) => [newPO, ...prev]);
-    addAuditLog('CREATE_PO', 'PURCHASES', `Buat Purchase Order ${poNumber} total Rp ${newPO.totalAmount}`);
-    showToast('success', `PO ${poNumber} berhasil dibuat!`);
-  };
-
-  const receivePurchaseOrder = (id: string) => {
-    const po = purchaseOrders.find((p) => p.id === id);
-    if (!po || po.status === 'RECEIVED') return;
-
-    setPurchaseOrders((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, status: 'RECEIVED' } : p))
-    );
-
-    // Increase product stock
-    po.items.forEach((item) => {
-      setProducts((prev) =>
-        prev.map((prod) => {
-          if (prod.id === item.productId) {
-            const currentStock = prod.stocks[po.outletId] || 0;
-            return {
-              ...prod,
-              stocks: {
-                ...prod.stocks,
-                [po.outletId]: currentStock + item.quantity,
-              },
-            };
-          }
-          return prod;
-        })
-      );
-    });
-
-    addAuditLog('RECEIVE_PO', 'PURCHASES', `Penerimaan barang PO ${po.poNumber}`);
-    showToast('success', `Barang PO ${po.poNumber} berhasil diterima dan stok ditambahkan!`);
-  };
-
-  // Promotions
-  const addPromotion = (prmData: Omit<Promotion, 'id' | 'usageCount'>) => {
-    const newPromo: Promotion = { ...prmData, id: `prm_${Date.now()}`, usageCount: 0 };
-    setPromotions((prev) => [...prev, newPromo]);
-    showToast('success', `Promo voucher ${newPromo.code} berhasil dibuat!`);
-  };
-
-  const updatePromotion = (id: string, data: Partial<Promotion>) => {
-    setPromotions((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, ...data } : p))
-    );
-    showToast('success', 'Data promo voucher diperbarui!');
-  };
-
-  const deletePromotion = (id: string) => {
-    setPromotions((prev) => prev.filter((p) => p.id !== id));
-    showToast('info', 'Promo voucher telah dihapus.');
-  };
-
-  const togglePromotion = (id: string) => {
-    setPromotions((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, isActive: !p.isActive } : p))
-    );
   };
 
   // Settings
@@ -964,17 +507,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       exportedAt: new Date().toISOString(),
       developer: 'matchadesu_',
       app: 'My Kasir Gweh POS & ERP UMKM',
-      users,
       outlets,
       products,
       categories,
-      customers,
-      suppliers,
-      purchaseOrders,
-      promotions,
       transactions,
-      shifts,
-      expenses,
       settings,
       stockOpnames,
       stockMutations,
@@ -989,13 +525,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (data.products && Array.isArray(data.products)) setProducts(data.products);
       if (data.categories && Array.isArray(data.categories)) setCategories(data.categories);
       if (data.outlets && Array.isArray(data.outlets)) setOutlets(data.outlets);
-      if (data.users && Array.isArray(data.users)) setUsers(data.users);
-      if (data.customers && Array.isArray(data.customers)) setCustomers(data.customers);
-      if (data.suppliers && Array.isArray(data.suppliers)) setSuppliers(data.suppliers);
-      if (data.promotions && Array.isArray(data.promotions)) setPromotions(data.promotions);
       if (data.transactions && Array.isArray(data.transactions)) setTransactions(data.transactions);
-      if (data.shifts && Array.isArray(data.shifts)) setShifts(data.shifts);
-      if (data.expenses && Array.isArray(data.expenses)) setExpenses(data.expenses);
       if (data.settings) setSettings(data.settings);
       showToast('success', 'Database berhasil dipulihkan dari cadangan JSON!');
       return true;
@@ -1007,19 +537,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const resetAllData = () => {
     localStorage.clear();
-    setUsers(INITIAL_USERS);
     setUser(INITIAL_USERS[0]);
     setOutlets(INITIAL_OUTLETS);
     setActiveOutlet(INITIAL_OUTLETS[0]);
     setProducts(INITIAL_PRODUCTS);
     setCategories(INITIAL_CATEGORIES);
-    setCustomers(INITIAL_CUSTOMERS);
-    setSuppliers(INITIAL_SUPPLIERS);
-    setPurchaseOrders(INITIAL_PURCHASE_ORDERS);
-    setPromotions(INITIAL_PROMOTIONS);
     setTransactions(INITIAL_TRANSACTIONS);
-    setShifts(INITIAL_SHIFTS);
-    setExpenses(INITIAL_EXPENSES);
     setSettings(INITIAL_SETTINGS);
     setAuditLogs(INITIAL_AUDIT_LOGS);
     setStockOpnames([]);
@@ -1033,15 +556,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         currentView,
         setCurrentView,
         user,
-        users,
-        employees: users,
-        loginAs,
-        addUser,
-        updateUser,
-        deleteUser,
-        addEmployee: addUser,
-        updateEmployee: updateUser,
-        deleteEmployee: deleteUser,
         outlets,
         activeOutlet,
         setActiveOutlet,
@@ -1065,32 +579,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addTransaction,
         refundTransaction,
         voidTransaction,
-        currentShift,
-        shifts,
-        openShift,
-        startShift,
-        closeShift,
-        endShift,
-        recordCashMovement,
-        expenses,
-        addExpense,
-        customers,
-        addCustomer,
-        updateCustomer,
-        deleteCustomer,
-        payCustomerDebt,
-        suppliers,
-        addSupplier,
-        updateSupplier,
-        deleteSupplier,
-        purchaseOrders,
-        createPurchaseOrder,
-        receivePurchaseOrder,
-        promotions,
-        addPromotion,
-        updatePromotion,
-        deletePromotion,
-        togglePromotion,
         settings,
         updateSettings,
         auditLogs,

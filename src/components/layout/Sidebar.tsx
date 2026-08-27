@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useCart } from '@/context/CartContext';
-import { AppView, Role } from '@/types';
+import { AppView } from '@/types';
 import {
   ShoppingCart,
   LayoutDashboard,
   Package,
   Boxes,
-  ClipboardList,
   Receipt,
-  Users,
   BarChart3,
-  Tag,
-  Store,
   Settings,
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Sparkles,
 } from 'lucide-react';
 
@@ -25,12 +20,11 @@ interface NavItem {
   id: AppView;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  allowedRoles: Role[];
   badge?: string | number;
 }
 
 export const Sidebar: React.FC = () => {
-  const { currentView, setCurrentView, user, products, activeOutlet } = useApp();
+  const { currentView, setCurrentView, products, activeOutlet } = useApp();
   const { heldOrders } = useCart();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -45,97 +39,52 @@ export const Sidebar: React.FC = () => {
       id: 'landing',
       label: 'Home & Overview',
       icon: Sparkles,
-      allowedRoles: ['OWNER', 'MANAGER', 'CASHIER', 'STAFF_INVENTORY'],
     },
     {
       id: 'pos',
       label: 'Kasir (POS)',
       icon: ShoppingCart,
-      allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'],
       badge: heldOrders.length > 0 ? `${heldOrders.length}` : undefined,
     },
     {
       id: 'dashboard',
       label: 'Dashboard Omset',
       icon: LayoutDashboard,
-      allowedRoles: ['OWNER', 'MANAGER'],
     },
     {
       id: 'products',
       label: 'Produk & Barcode',
       icon: Package,
-      allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'],
     },
     {
       id: 'inventory',
       label: 'Stok & Opname',
       icon: Boxes,
-      allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'],
       badge: lowStockCount > 0 ? `${lowStockCount} Low` : undefined,
     },
     {
       id: 'transactions',
       label: 'Riwayat Transaksi',
       icon: Receipt,
-      allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'],
-    },
-    {
-      id: 'shifts',
-      label: 'Shift & Kas Laci',
-      icon: Clock,
-      allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'],
-    },
-    {
-      id: 'customers',
-      label: 'Pelanggan & CRM',
-      icon: Users,
-      allowedRoles: ['OWNER', 'MANAGER', 'CASHIER'],
     },
     {
       id: 'reports',
       label: 'Laporan Laba Rugi',
       icon: BarChart3,
-      allowedRoles: ['OWNER', 'MANAGER'],
-    },
-    {
-      id: 'purchases',
-      label: 'Purchase Order (PO)',
-      icon: ClipboardList,
-      allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'],
-    },
-    {
-      id: 'suppliers',
-      label: 'Pemasok / Vendor',
-      icon: Store,
-      allowedRoles: ['OWNER', 'MANAGER', 'STAFF_INVENTORY'],
-    },
-    {
-      id: 'promotions',
-      label: 'Promo & Diskon',
-      icon: Tag,
-      allowedRoles: ['OWNER', 'MANAGER'],
-    },
-    {
-      id: 'employees',
-      label: 'Karyawan & Staff',
-      icon: Users,
-      allowedRoles: ['OWNER', 'MANAGER'],
     },
     {
       id: 'audit',
       label: 'Audit Log Sistem',
       icon: ShieldCheck,
-      allowedRoles: ['OWNER'],
     },
     {
       id: 'settings',
       label: 'Pengaturan Toko',
       icon: Settings,
-      allowedRoles: ['OWNER', 'MANAGER'],
     },
   ];
 
-  const visibleItems = navItems.filter((item) => item.allowedRoles.includes(user.role));
+  const visibleItems = navItems;
 
   return (
     <aside

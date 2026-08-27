@@ -1,7 +1,6 @@
 import React from 'react';
 import { useApp } from '@/context/AppContext';
 import { useCart } from '@/context/CartContext';
-import { formatRupiah } from '@/utils/formatters';
 import {
   Store,
   Search,
@@ -10,7 +9,6 @@ import {
   Moon,
   Sun,
   Maximize,
-  Clock,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -20,7 +18,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   const {
     user,
-    currentShift,
     setCurrentView,
     soundEnabled,
     toggleSound,
@@ -77,23 +74,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </kbd>
         </button>
 
-        {/* Shift Cash Drawer Status */}
-        <button
-          onClick={() => setCurrentView('shifts')}
-          className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl border text-[11px] sm:text-xs font-bold transition-all min-h-[32px] sm:min-h-[36px] ${
-            currentShift
-              ? 'border-[#444c5d] bg-[#1f232b] text-[#f7f6f2] dark:border-[#c5bfb4] dark:bg-[#f5f4ef] dark:text-[#181b21]'
-              : 'border-[#dcd7ce] bg-[#efece6] text-[#333a47] dark:border-[#333b49] dark:bg-[#20252e] dark:text-[#c4cad4]'
-          }`}
-          title="Status Shift Kasir"
-        >
-          <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-          <span className="hidden sm:inline">
-            {currentShift ? `Kasir: ${formatRupiah(currentShift.startingCash + currentShift.totalCashSales - currentShift.cashOutExpenses)}` : 'Shift Tutup'}
-          </span>
-          <span className="sm:hidden">{currentShift ? 'Kasir' : 'Tutup'}</span>
-        </button>
-
         {/* Quick Search on Mobile */}
         <button
           onClick={onOpenSearch}
@@ -114,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
         )}
       </div>
 
-      {/* Right Controls: Sound, Theme, Fullscreen, Role Switcher */}
+      {/* Right Controls: Sound, Theme, Fullscreen */}
       <div className="flex items-center gap-1 sm:gap-2">
         <button
           onClick={toggleSound}

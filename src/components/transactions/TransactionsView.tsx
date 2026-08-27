@@ -133,7 +133,6 @@ export const TransactionsView: React.FC = () => {
             <option value="QRIS">QRIS Dinamis</option>
             <option value="DEBIT_EDC">Debit EDC</option>
             <option value="TRANSFER">Transfer Bank</option>
-            <option value="HUTANG_KASBON">Kasbon / Hutang</option>
           </select>
         </div>
       </div>

@@ -13,14 +13,8 @@ import { PosTerminal } from '@/components/pos/PosTerminal';
 import { DashboardView } from '@/components/dashboard/DashboardView';
 import { ProductsView } from '@/components/products/ProductsView';
 import { InventoryView } from '@/components/inventory/InventoryView';
-import { PurchasesView } from '@/components/purchases/PurchasesView';
-import { SuppliersView } from '@/components/suppliers/SuppliersView';
 import { TransactionsView } from '@/components/transactions/TransactionsView';
-import { ShiftsView } from '@/components/shifts/ShiftsView';
-import { CustomersView } from '@/components/customers/CustomersView';
-import { PromotionsView } from '@/components/promotions/PromotionsView';
 import { ReportsView } from '@/components/reports/ReportsView';
-import { EmployeesView } from '@/components/employees/EmployeesView';
 import { AuditView } from '@/components/audit/AuditView';
 import { SettingsView } from '@/components/settings/SettingsView';
 
@@ -59,22 +53,10 @@ const MainLayout: React.FC = () => {
         return <ProductsView />;
       case 'inventory':
         return <InventoryView />;
-      case 'purchases':
-        return <PurchasesView />;
-      case 'suppliers':
-        return <SuppliersView />;
       case 'transactions':
         return <TransactionsView />;
-      case 'shifts':
-        return <ShiftsView />;
-      case 'customers':
-        return <CustomersView />;
-      case 'promotions':
-        return <PromotionsView />;
       case 'reports':
         return <ReportsView />;
-      case 'employees':
-        return <EmployeesView />;
       case 'audit':
         return <AuditView />;
       case 'settings':

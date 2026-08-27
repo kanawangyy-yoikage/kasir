@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 
 export const DashboardView: React.FC = () => {
-  const { transactions, products, activeOutlet, currentShift, setCurrentView } = useApp();
+  const { transactions, products, activeOutlet, setCurrentView } = useApp();
   const [timeRange, setTimeRange] = useState<'today' | '7days' | 'month'>('today');
 
   // Filter transactions by outlet & time range
@@ -85,7 +85,6 @@ export const DashboardView: React.FC = () => {
       QRIS: 0,
       DEBIT_EDC: 0,
       TRANSFER: 0,
-      HUTANG_KASBON: 0,
     };
 
     filteredTransactions.forEach((t) => {
@@ -215,32 +214,6 @@ export const DashboardView: React.FC = () => {
             <p className="text-[11px] text-[#70798a] mt-1">Nilai belanja per transaksi</p>
           </div>
         </Card>
-
-        {/* Kas Laci Kasir */}
-        <Card className="p-4 sm:p-5 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-[#70798a] uppercase tracking-wider">
-              Kas Laci Shift Aktif
-            </span>
-            <div className="h-9 w-9 rounded-xl bg-[#efece6] dark:bg-[#252b36] text-[#1f232b] dark:text-[#f4f2ec] flex items-center justify-center">
-              <Banknote className="h-4.5 w-4.5" />
-            </div>
-          </div>
-          <div>
-            <h3 className="text-xl sm:text-2xl font-black text-[#1a1d24] dark:text-[#f4f2ec]">
-              {currentShift
-                ? formatRupiah(
-                    currentShift.startingCash +
-                      currentShift.totalCashSales -
-                      currentShift.cashOutExpenses
-                  )
-                : 'Tutup'}
-            </h3>
-            <p className="text-[11px] text-[#70798a] mt-1">
-              {currentShift ? `Kasir: ${currentShift.cashierName}` : 'Shift kasir belum dibuka'}
-            </p>
-          </div>
-        </Card>
       </div>
 
       {/* MIDDLE SECTION: Best Sellers & Payment Methods */}
@@ -362,26 +335,6 @@ export const DashboardView: React.FC = () => {
                   style={{
                     width: `${
                       totalOmset > 0 ? (paymentBreakdown.DEBIT_EDC / totalOmset) * 100 : 0
-                    }%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Kasbon / Hutang */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec]">
-                <span className="flex items-center gap-1.5">
-                  <span>Hutang / Kasbon</span>
-                </span>
-                <span>{formatRupiah(paymentBreakdown.HUTANG_KASBON)}</span>
-              </div>
-              <div className="h-2 w-full bg-[#efece6] dark:bg-[#252b36] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#7b8496] dark:bg-[#555d6e] rounded-full"
-                  style={{
-                    width: `${
-                      totalOmset > 0 ? (paymentBreakdown.HUTANG_KASBON / totalOmset) * 100 : 0
                     }%`,
                   }}
                 />

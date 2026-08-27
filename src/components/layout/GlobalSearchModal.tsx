@@ -3,7 +3,7 @@ import { useApp } from '@/context/AppContext';
 import { useCart } from '@/context/CartContext';
 import { Modal } from '@/components/ui/Modal';
 import { formatRupiah } from '@/utils/formatters';
-import { Search, Package, Users, Receipt, ArrowRight } from 'lucide-react';
+import { Search, Package, Receipt, ArrowRight } from 'lucide-react';
 
 interface GlobalSearchModalProps {
   isOpen: boolean;
@@ -11,7 +11,7 @@ interface GlobalSearchModalProps {
 }
 
 export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, onClose }) => {
-  const { products, customers, transactions, setCurrentView } = useApp();
+  const { products, transactions, setCurrentView } = useApp();
   const { addToCart } = useCart();
   const [query, setQuery] = useState('');
 
@@ -25,15 +25,6 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
           p.name.toLowerCase().includes(q) ||
           p.sku.toLowerCase().includes(q) ||
           p.barcode.includes(q)
-      )
-    : [];
-
-  const matchedCustomers = q
-    ? customers.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          c.phone.includes(q) ||
-          (c.email && c.email.toLowerCase().includes(q))
       )
     : [];
 
@@ -62,7 +53,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ketik nama produk, SKU, barcode, pelanggan, no. struk..."
+            placeholder="Ketik nama produk, SKU, barcode, no. struk..."
             className="w-full h-12 pl-12 pr-4 bg-[#f7f6f2] dark:bg-[#181b20] border border-[#dcd7ce] dark:border-[#333b49] rounded-2xl text-sm font-bold text-[#1a1d24] dark:text-[#f4f2ec] placeholder:text-[#8e97a6] focus:outline-hidden focus:ring-2 focus:ring-[#1f232b]/20 focus:border-[#1f232b] dark:focus:ring-[#f5f4ef]/20 dark:focus:border-[#f5f4ef]"
           />
         </div>
@@ -120,40 +111,6 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
                 </div>
               )}
 
-              {/* Customers match */}
-              {matchedCustomers.length > 0 && (
-                <div>
-                  <div className="text-[11px] font-bold text-[#7a8394] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5" />
-                    <span>Pelanggan / Member ({matchedCustomers.length})</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {matchedCustomers.map((c) => (
-                      <div
-                        key={c.id}
-                        onClick={() => {
-                          setCurrentView('customers');
-                          onClose();
-                        }}
-                        className="flex items-center justify-between p-3 rounded-2xl border border-[#e2ded6] dark:border-[#2e3542] hover:border-[#b8b2a5] bg-[#fcfbf8] dark:bg-[#1c2026] cursor-pointer transition-all"
-                      >
-                        <div>
-                          <div className="text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec]">
-                            {c.name} ({c.tier})
-                          </div>
-                          <div className="text-[11px] text-[#70798a]">
-                            HP: {c.phone} | Poin: {c.points}
-                          </div>
-                        </div>
-                        <span className="text-xs font-bold text-[#485060] dark:text-[#a0a8b7]">
-                          {formatRupiah(c.totalSpent)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* Transactions match */}
               {matchedTransactions.length > 0 && (
                 <div>
@@ -189,7 +146,6 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen, on
               )}
 
               {matchedProducts.length === 0 &&
-                matchedCustomers.length === 0 &&
                 matchedTransactions.length === 0 && (
                   <div className="p-8 text-center text-[#70798a] text-xs">
                     Tidak ditemukan data untuk "{query}".

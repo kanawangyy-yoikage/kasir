@@ -68,7 +68,7 @@ export interface CartItem {
   subtotal: number;
 }
 
-export type PaymentMethod = 'CASH' | 'QRIS' | 'DEBIT_EDC' | 'TRANSFER' | 'HUTANG_KASBON';
+export type PaymentMethod = 'CASH' | 'QRIS' | 'DEBIT_EDC' | 'TRANSFER';
 
 export interface PaymentDetails {
   method: PaymentMethod;
@@ -288,14 +288,8 @@ export type AppView =
   | 'pos'
   | 'products'
   | 'inventory'
-  | 'purchases'
-  | 'suppliers'
   | 'transactions'
-  | 'shifts'
-  | 'customers'
-  | 'promotions'
   | 'reports'
-  | 'employees'
   | 'outlets'
   | 'audit'
   | 'settings';

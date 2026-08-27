@@ -15,8 +15,6 @@ import {
   Plus,
   Minus,
   Trash2,
-  Tag,
-  User,
   Utensils,
   CreditCard,
   QrCode,
@@ -39,7 +37,6 @@ export const PosTerminal: React.FC = () => {
     categories,
     activeOutlet,
     user,
-    customers,
     addTransaction,
     settings,
     soundEnabled,
@@ -53,14 +50,9 @@ export const PosTerminal: React.FC = () => {
     removeItem,
     updateItemNotes,
     clearCart,
-    selectedCustomer,
-    setSelectedCustomer,
     tableNumber,
     setTableNumber,
     orderNotes,
-    appliedPromotion,
-    applyPromotion,
-    removePromotion,
     customDiscount,
     setCustomDiscount,
     heldOrders,
@@ -84,9 +76,6 @@ export const PosTerminal: React.FC = () => {
 
   // Modals state
   const [selectedProductForVariant, setSelectedProductForVariant] = useState<Product | null>(null);
-  const [isCustomerModalOpen, setIsCustomerModalOpen] = useState<boolean>(false);
-  const [isPromoModalOpen, setIsPromoModalOpen] = useState<boolean>(false);
-  const [promoCodeInput, setPromoCodeInput] = useState<string>('');
   const [isCustomDiscountModalOpen, setIsCustomDiscountModalOpen] = useState<boolean>(false);
   const [isHeldOrdersModalOpen, setIsHeldOrdersModalOpen] = useState<boolean>(false);
   const [isBarcodeScannerModalOpen, setIsBarcodeScannerModalOpen] = useState<boolean>(false);
@@ -227,13 +216,10 @@ export const PosTerminal: React.FC = () => {
       outletName: activeOutlet.name,
       cashierId: user.id,
       cashierName: user.name,
-      customerId: selectedCustomer?.id,
-      customerName: selectedCustomer?.name,
       tableNumber: tableNumber || undefined,
       items: [...cart],
       subtotal,
       discountAmount: discountTotal,
-      discountNote: appliedPromotion ? appliedPromotion.name : undefined,
       total: grandTotal,
       totalCost,
       grossProfit: grandTotal - totalCost,
@@ -524,28 +510,8 @@ export const PosTerminal: React.FC = () => {
         {/* Customer & Order Header */}
         <div className="p-3 sm:p-3.5 border-b border-[#e2ded6] dark:border-[#2e3542] space-y-2 bg-[#f7f6f2] dark:bg-[#181b20] shrink-0">
           <div className="flex items-center gap-2">
-            {/* Customer Picker Button */}
-            <button
-              onClick={() => setIsCustomerModalOpen(true)}
-              className="flex-1 flex items-center justify-between px-3 py-2 rounded-xl border border-[#dcd7ce] dark:border-[#333b49] bg-[#fcfbf8] dark:bg-[#20252e] hover:bg-[#efece6] dark:hover:bg-[#282f3a] text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec] transition-colors min-h-[40px] cursor-pointer"
-            >
-              <div className="flex items-center gap-2 truncate">
-                <User className="h-4 w-4 text-[#485060] dark:text-[#a0a8b7] shrink-0" />
-                <span className="truncate">
-                  {selectedCustomer
-                    ? `${selectedCustomer.name} (${selectedCustomer.tier})`
-                    : 'Pilih Pelanggan / Member'}
-                </span>
-              </div>
-              {selectedCustomer && (
-                <span className="text-[10px] bg-[#1f232b] text-[#f7f6f2] dark:bg-[#f5f4ef] dark:text-[#181b21] px-1.5 py-0.5 rounded-md font-bold">
-                  {selectedCustomer.points} P
-                </span>
-              )}
-            </button>
-
             {/* Table Number Input (F&B) */}
-            <div className="w-28 relative">
+            <div className="w-full relative">
               <Utensils className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-[#70798a]" />
               <input
                 type="text"
@@ -655,29 +621,6 @@ export const PosTerminal: React.FC = () => {
         <div className="p-3 sm:p-3.5 border-t border-[#e2ded6] dark:border-[#2e3542] bg-[#f7f6f2] dark:bg-[#181b20] space-y-2.5 shrink-0">
           {/* Promo Code & Custom Discount Trigger */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setIsPromoModalOpen(true)}
-              className="flex-1 flex items-center justify-between px-2.5 py-1.5 rounded-xl border border-[#dcd7ce] dark:border-[#333b49] bg-[#fcfbf8] dark:bg-[#20252e] text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec] hover:bg-[#efece6] dark:hover:bg-[#252b36] min-h-[38px] cursor-pointer"
-            >
-              <div className="flex items-center gap-1.5 truncate">
-                <Tag className="h-3.5 w-3.5 text-[#485060] dark:text-[#a0a8b7] shrink-0" />
-                <span className="truncate">
-                  {appliedPromotion ? appliedPromotion.code : 'Kode Promo'}
-                </span>
-              </div>
-              {appliedPromotion && (
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removePromotion();
-                  }}
-                  className="font-black text-xs ml-1"
-                >
-                  ✕
-                </span>
-              )}
-            </button>
-
             <button
               onClick={() => setIsCustomDiscountModalOpen(true)}
               className="px-2.5 py-1.5 rounded-xl border border-[#dcd7ce] dark:border-[#333b49] bg-[#fcfbf8] dark:bg-[#20252e] text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec] hover:bg-[#efece6] dark:hover:bg-[#252b36] flex items-center gap-1 min-h-[38px] cursor-pointer"
@@ -822,98 +765,6 @@ export const PosTerminal: React.FC = () => {
           </div>
         </Modal>
       )}
-
-      {/* MODAL: Customer Selection */}
-      <Modal
-        isOpen={isCustomerModalOpen}
-        onClose={() => setIsCustomerModalOpen(false)}
-        title="Pilih Pelanggan / Member CRM"
-        maxWidth="md"
-      >
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-[#5c6475] dark:text-[#9aa2b0]">Pilih pelanggan untuk poin loyalitas:</p>
-            {selectedCustomer && (
-              <Button
-                size="xs"
-                variant="ghost"
-                onClick={() => {
-                  setSelectedCustomer(null);
-                  setIsCustomerModalOpen(false);
-                }}
-              >
-                Hapus Pelanggan
-              </Button>
-            )}
-          </div>
-
-          <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
-            {customers.map((c) => (
-              <div
-                key={c.id}
-                onClick={() => {
-                  setSelectedCustomer(c);
-                  setIsCustomerModalOpen(false);
-                  showToast('success', `Pelanggan ${c.name} dipilih`);
-                }}
-                className={`p-3 rounded-2xl border cursor-pointer transition-all flex items-center justify-between min-h-[48px] ${
-                  selectedCustomer?.id === c.id
-                    ? 'border-[#1f232b] bg-[#efece6] dark:border-[#f5f4ef] dark:bg-[#252b36]'
-                    : 'border-[#e2ded6] dark:border-[#2e3542] hover:border-[#7a8394] bg-[#fcfbf8] dark:bg-[#1c2026]'
-                }`}
-              >
-                <div>
-                  <div className="text-xs font-black text-[#1a1d24] dark:text-[#f4f2ec]">
-                    {c.name}
-                  </div>
-                  <div className="text-[10px] text-[#70798a]">
-                    HP: {c.phone} | Total Belanja: {formatRupiah(c.totalSpent)}
-                  </div>
-                </div>
-                <div className="text-right">
-                  <Badge variant="primary" size="sm">
-                    {c.tier}
-                  </Badge>
-                  <div className="text-[10px] text-[#5c6475] dark:text-[#9aa2b0] font-bold mt-1">{c.points} Poin</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Modal>
-
-      {/* MODAL: Promo Voucher */}
-      <Modal
-        isOpen={isPromoModalOpen}
-        onClose={() => setIsPromoModalOpen(false)}
-        title="Pasang Kode Voucher Promo"
-        maxWidth="sm"
-        footer={
-          <Button
-            onClick={() => {
-              if (applyPromotion(promoCodeInput)) {
-                setIsPromoModalOpen(false);
-                setPromoCodeInput('');
-              }
-            }}
-          >
-            Terapkan Voucher
-          </Button>
-        }
-      >
-        <div className="space-y-3">
-          <input
-            type="text"
-            value={promoCodeInput}
-            onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
-            placeholder="Ketik kode (Contoh: DISKON10)"
-            className="w-full h-11 px-3 text-xs uppercase font-mono font-bold bg-[#f7f6f2] dark:bg-[#181b20] border border-[#dcd7ce] dark:border-[#333b49] rounded-2xl"
-          />
-          <div className="text-[11px] text-[#70798a]">
-            Promo yang tersedia: <strong>DISKON10</strong> (10% off), <strong>HEMAT15K</strong> (Rp 15.000 off)
-          </div>
-        </div>
-      </Modal>
 
       {/* MODAL: Custom Discount */}
       <Modal
@@ -1146,18 +997,6 @@ export const PosTerminal: React.FC = () => {
               <Building2 className="h-5 w-5" />
               <span className="text-xs">Transfer</span>
             </button>
-
-            <button
-              onClick={() => setPaymentMethod('HUTANG_KASBON')}
-              className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 min-h-[48px] cursor-pointer ${
-                paymentMethod === 'HUTANG_KASBON'
-                  ? 'border-[#1f232b] bg-[#1f232b] text-[#f7f6f2] dark:border-[#f5f4ef] dark:bg-[#f5f4ef] dark:text-[#181b21] font-bold shadow-xs'
-                  : 'border-[#e2ded6] text-[#485060] dark:border-[#2e3542] dark:text-[#9aa2b0] bg-[#fcfbf8] dark:bg-[#1c2026]'
-              }`}
-            >
-              <FileText className="h-5 w-5" />
-              <span className="text-xs">Kasbon / Hutang</span>
-            </button>
           </div>
 
           {/* Details based on Payment Method */}
@@ -1275,23 +1114,6 @@ export const PosTerminal: React.FC = () => {
             </div>
           )}
 
-          {paymentMethod === 'HUTANG_KASBON' && (
-            <div className="p-4 bg-[#efece6] dark:bg-[#252b36] rounded-2xl border border-[#dcd7ce] dark:border-[#333b49] text-xs text-[#1a1d24] dark:text-[#f4f2ec] space-y-2">
-              <div className="font-bold flex items-center gap-1.5">
-                <AlertCircle className="h-4 w-4 text-[#485060]" />
-                <span>Peringatan Pembayaran Kasbon</span>
-              </div>
-              <p>
-                Tagihan senilai <strong>{formatRupiah(grandTotal)}</strong> akan dicatat ke saldo hutang member{' '}
-                <strong>{selectedCustomer ? selectedCustomer.name : 'Pelanggan Umum'}</strong>.
-              </p>
-              {!selectedCustomer && (
-                <p className="text-[#3b4251] dark:text-[#c4cad4] font-bold">
-                  * Harap pilih member terlebih dahulu agar hutang tercatat pada database pelanggan!
-                </p>
-              )}
-            </div>
-          )}
         </div>
       </Modal>
 
@@ -1340,9 +1162,6 @@ export const PosTerminal: React.FC = () => {
                 <span>Kasir: {lastCompletedTransaction.cashierName}</span>
                 <span>{lastCompletedTransaction.payment.method}</span>
               </div>
-              {lastCompletedTransaction.customerName && (
-                <div>Pelanggan: {lastCompletedTransaction.customerName}</div>
-              )}
               {lastCompletedTransaction.tableNumber && (
                 <div>Meja: {lastCompletedTransaction.tableNumber}</div>
               )}
