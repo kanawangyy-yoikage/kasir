@@ -20,18 +20,18 @@ import {
 } from '@/types';
 import bcrypt from 'bcryptjs';
 
-export const INITIAL_BUSINESS_ID = 'biz_sann_01';
+export const INITIAL_BUSINESS_ID = 'biz_matchadesu_01';
 export const INITIAL_OUTLET_MAIN_ID = 'out_jakarta_selatan_01';
 export const INITIAL_OUTLET_BRANCH_ID = 'out_jakarta_pusat_02';
 
 export const SEED_BUSINESS: Business = {
   id: INITIAL_BUSINESS_ID,
-  name: 'Warung SANN & Mart',
-  legalName: 'PT SANN Niaga Sejahtera',
+  name: 'Warung Matchadesu & Mart',
+  legalName: 'PT Matchadesu Niaga Sejahtera',
   logo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80',
   address: 'Jl. Tebet Raya No. 42, Jakarta Selatan, DKI Jakarta 12810',
   phone: '0812-9876-5432',
-  email: 'halo@warungsann.com',
+  email: 'halo@warungmatchadesu.com',
   taxNumber: '09.123.456.7-012.000',
   taxRate: 0.11,
   taxEnabled: true,
@@ -41,9 +41,9 @@ export const SEED_BUSINESS: Business = {
 };
 
 export const SEED_SETTINGS: BusinessSettings = {
-  id: 'set_sann_01',
+  id: 'set_matchadesu_01',
   businessId: INITIAL_BUSINESS_ID,
-  receiptHeader: 'WARUNG SANN & MART\nSolusi Kebutuhan Harian & Kopi Nikmat',
+  receiptHeader: 'WARUNG Matchadesu & MART\nSolusi Kebutuhan Harian & Kopi Nikmat',
   receiptFooter: 'Terima kasih atas kunjungan Anda!\nBarang yang sudah dibeli tidak dapat ditukar kecuali ada perjanjian.',
   receiptShowLogo: true,
   receiptShowCustomer: true,
@@ -65,7 +65,7 @@ export const SEED_OUTLETS: Outlet[] = [
     code: 'TBT-01',
     address: 'Jl. Tebet Raya No. 42, Jakarta Selatan',
     phone: '0812-9876-5432',
-    managerName: 'Muhammad Sann',
+    managerName: 'Muhammad Matchadesu',
     isMain: true,
     isActive: true,
     createdAt: new Date(Date.now() - 60 * 24 * 3600 * 1000).toISOString(),
@@ -94,7 +94,7 @@ export const SEED_USERS: (User & { passwordHash: string })[] = [
     id: 'usr_owner_01',
     businessId: INITIAL_BUSINESS_ID,
     outletId: INITIAL_OUTLET_MAIN_ID,
-    name: 'Muhammad Sann (Owner)',
+    name: 'Muhammad Matchadesu (Owner)',
     email: 'owner@example.com',
     phone: '0812-8888-9999',
     role: 'OWNER',
@@ -207,7 +207,7 @@ export const SEED_CATEGORIES: Category[] = [
 ];
 
 export const SEED_BRANDS: Brand[] = [
-  { id: 'brd_sann_01', businessId: INITIAL_BUSINESS_ID, name: 'SANN Signature', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  { id: 'brd_matchadesu_01', businessId: INITIAL_BUSINESS_ID, name: 'Matchadesu Signature', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
   { id: 'brd_indofood_02', businessId: INITIAL_BUSINESS_ID, name: 'Indofood', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
   { id: 'brd_wings_03', businessId: INITIAL_BUSINESS_ID, name: 'Wings Food', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
   { id: 'brd_mayora_04', businessId: INITIAL_BUSINESS_ID, name: 'Mayora', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
@@ -262,9 +262,9 @@ export const SEED_PRODUCTS: Product[] = [
     id: 'prd_kopi_gula_aren_01',
     businessId: INITIAL_BUSINESS_ID,
     categoryId: 'cat_minuman_01',
-    brandId: 'brd_sann_01',
+    brandId: 'brd_matchadesu_01',
     supplierId: 'sup_kopi_02',
-    name: 'Es Kopi Susu Gula Aren SANN',
+    name: 'Es Kopi Susu Gula Aren Matchadesu',
     sku: 'SKU-KOP-001',
     barcode: '899100100101',
     description: 'Espresso house blend arabica robusta dengan susu segar creamy dan gula aren murni organik.',
@@ -324,7 +324,7 @@ export const SEED_PRODUCTS: Product[] = [
     id: 'prd_teh_tarik_02',
     businessId: INITIAL_BUSINESS_ID,
     categoryId: 'cat_minuman_01',
-    brandId: 'brd_sann_01',
+    brandId: 'brd_matchadesu_01',
     supplierId: 'sup_dist_03',
     name: 'Es Teh Tarik Madu',
     sku: 'SKU-TEH-002',
@@ -350,7 +350,7 @@ export const SEED_PRODUCTS: Product[] = [
     categoryId: 'cat_makanan_02',
     brandId: 'brd_indofood_02',
     supplierId: 'sup_dist_03',
-    name: 'Indomie Goreng Komplit SANN',
+    name: 'Indomie Goreng Komplit Matchadesu',
     sku: 'SKU-MIE-003',
     barcode: '899100100103',
     description: 'Indomie goreng lezat disajikan dengan telur mata sapi setengah matang, kornet tumis, caisim & taburan bawang goreng.',
@@ -398,7 +398,7 @@ export const SEED_PRODUCTS: Product[] = [
     id: 'prd_roti_bakar_04',
     businessId: INITIAL_BUSINESS_ID,
     categoryId: 'cat_makanan_02',
-    brandId: 'brd_sann_01',
+    brandId: 'brd_matchadesu_01',
     supplierId: 'sup_pangan_01',
     name: 'Roti Bakar Cokelat Keju Melt',
     sku: 'SKU-ROT-004',
@@ -422,7 +422,7 @@ export const SEED_PRODUCTS: Product[] = [
     id: 'prd_beras_ramos_05',
     businessId: INITIAL_BUSINESS_ID,
     categoryId: 'cat_sembako_04',
-    brandId: 'brd_sann_01',
+    brandId: 'brd_matchadesu_01',
     supplierId: 'sup_pangan_01',
     name: 'Beras Ramos Super Pandan Wangi 5kg',
     sku: 'SKU-SMB-005',
@@ -470,9 +470,9 @@ export const SEED_PRODUCTS: Product[] = [
     id: 'prd_keripik_singkong_07',
     businessId: INITIAL_BUSINESS_ID,
     categoryId: 'cat_snack_03',
-    brandId: 'brd_sann_01',
+    brandId: 'brd_matchadesu_01',
     supplierId: 'sup_dist_03',
-    name: 'Keripik Singkong Balado Renyah SANN',
+    name: 'Keripik Singkong Balado Renyah Matchadesu',
     sku: 'SKU-SNK-007',
     barcode: '899100100107',
     description: 'Keripik singkong renyah dengan lumuran cabai merah asli bumbu balado pedas manis gurih nagih.',
@@ -518,7 +518,7 @@ export const SEED_PRODUCTS: Product[] = [
     id: 'prd_combo_sarapan_09',
     businessId: INITIAL_BUSINESS_ID,
     categoryId: 'cat_paket_05',
-    brandId: 'brd_sann_01',
+    brandId: 'brd_matchadesu_01',
     supplierId: 'sup_dist_03',
     name: 'Combo Sarapan: Kopi Susu + Roti Bakar Melt',
     sku: 'SKU-CMB-009',
@@ -769,7 +769,7 @@ export const SEED_AUDIT_LOGS: AuditLog[] = [
     id: 'aud_01',
     businessId: INITIAL_BUSINESS_ID,
     userId: 'usr_owner_01',
-    userName: 'Muhammad Sann',
+    userName: 'Muhammad Matchadesu',
     userRole: 'OWNER',
     action: 'LOGIN',
     entity: 'User',
@@ -793,13 +793,13 @@ export const SEED_AUDIT_LOGS: AuditLog[] = [
 
 export const SEED_PURCHASES: Purchase[] = [
   {
-    id: 'po_sann_01',
+    id: 'po_matchadesu_01',
     poNumber: 'PO-2026-08-001',
     outletId: INITIAL_OUTLET_MAIN_ID,
     supplierId: 'sup_kopi_02',
     supplierName: 'CV Jaya Roastery & Beans',
     createdById: 'usr_owner_01',
-    createdByName: 'Muhammad Sann',
+    createdByName: 'Muhammad Matchadesu',
     status: 'RECEIVED',
     subtotal: 3500000,
     taxAmount: 0,
@@ -813,7 +813,7 @@ export const SEED_PURCHASES: Purchase[] = [
     items: [
       {
         id: 'poi_01',
-        purchaseId: 'po_sann_01',
+        purchaseId: 'po_matchadesu_01',
         productId: 'prd_kopi_gula_aren_01',
         productName: 'Biji Kopi House Blend Arabica Robusta',
         quantity: 50,
@@ -823,7 +823,7 @@ export const SEED_PURCHASES: Purchase[] = [
     ],
   },
   {
-    id: 'po_sann_02',
+    id: 'po_matchadesu_02',
     poNumber: 'PO-2026-08-002',
     outletId: INITIAL_OUTLET_MAIN_ID,
     supplierId: 'sup_pangan_01',
@@ -842,7 +842,7 @@ export const SEED_PURCHASES: Purchase[] = [
     items: [
       {
         id: 'poi_02',
-        purchaseId: 'po_sann_02',
+        purchaseId: 'po_matchadesu_02',
         productId: 'prd_beras_ramos_05',
         productName: 'Beras Ramos Super 5kg',
         quantity: 50,
@@ -851,7 +851,7 @@ export const SEED_PURCHASES: Purchase[] = [
       },
       {
         id: 'poi_03',
-        purchaseId: 'po_sann_02',
+        purchaseId: 'po_matchadesu_02',
         productId: 'prd_minyak_bimoli_06',
         productName: 'Minyak Goreng Bimoli 2L',
         quantity: 70,
@@ -925,7 +925,7 @@ export function generateSeedTransactions(): Transaction[] {
 
       return {
         id: `txi_${i}_${idx}`,
-        transactionId: `tx_sann_${1000 + i}`,
+        transactionId: `tx_matchadesu_${1000 + i}`,
         productId: it.product.id,
         variantId: null,
         productName: it.product.name,
@@ -946,7 +946,7 @@ export function generateSeedTransactions(): Transaction[] {
     const grossProfit = subtotal - totalCost;
 
     const tx: Transaction = {
-      id: `tx_sann_${1000 + i}`,
+      id: `tx_matchadesu_${1000 + i}`,
       invoiceNumber: `INV/${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}/${(1000 + i).toString()}`,
       outletId: INITIAL_OUTLET_MAIN_ID,
       cashierId: 'usr_cashier_01',
@@ -975,7 +975,7 @@ export function generateSeedTransactions(): Transaction[] {
       payments: [
         {
           id: `pay_${i}`,
-          transactionId: `tx_sann_${1000 + i}`,
+          transactionId: `tx_matchadesu_${1000 + i}`,
           method: template.payment,
           amount: grandTotal,
           amountPaid: template.payment === 'CASH' ? Math.ceil(grandTotal / 50000) * 50000 : grandTotal,

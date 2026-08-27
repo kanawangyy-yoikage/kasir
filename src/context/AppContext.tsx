@@ -962,8 +962,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const fullDb = {
       version: '2.0',
       exportedAt: new Date().toISOString(),
-      developer: 'SFG',
-      app: 'KasirKu POS & ERP UMKM',
+      developer: 'matchadesu_',
+      app: 'My Kasir Gweh POS & ERP UMKM',
       users,
       outlets,
       products,

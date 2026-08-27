@@ -1354,7 +1354,7 @@ export const PosTerminal: React.FC = () => {
             {/* Footer */}
             <div className="text-center text-[10px] text-[#70798a] pt-2 border-t border-dashed border-[#dcd7ce] space-y-0.5">
               <p className="whitespace-pre-line">{settings.receiptFooter}</p>
-              <p className="text-[9px] text-[#9ba4b5] pt-1">Sistem KasirKu • SFG Developer</p>
+              <p className="text-[9px] text-[#9ba4b5] pt-1">My Kasir Gweh • matchadesu_</p>
             </div>
           </div>
         </Modal>

@@ -1,15 +1,15 @@
-# KARSIR-UMKM
+# My Kasir Gweh
 
-[![License](https://img.shields.io/github/license/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM/blob/main/LICENSE)
-[![Top Language](https://img.shields.io/github/languages/top/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM)
-[![Last Commit](https://img.shields.io/github/last-commit/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM/commits)
-[![Open Issues](https://img.shields.io/github/issues/sannnproject/KARSIR-UMKM?style=flat-square)](https://github.com/sannnproject/KARSIR-UMKM/issues)
+[![License](https://img.shields.io/github/license/matchadesu_/KARSIR-UMKM?style=flat-square)](https://github.com/matchadesu_/KARSIR-UMKM/blob/main/LICENSE)
+[![Top Language](https://img.shields.io/github/languages/top/matchadesu_/KARSIR-UMKM?style=flat-square)](https://github.com/matchadesu_/KARSIR-UMKM)
+[![Last Commit](https://img.shields.io/github/last-commit/matchadesu_/KARSIR-UMKM?style=flat-square)](https://github.com/matchadesu_/KARSIR-UMKM/commits)
+[![Open Issues](https://img.shields.io/github/issues/matchadesu_/KARSIR-UMKM?style=flat-square)](https://github.com/matchadesu_/KARSIR-UMKM/issues)
 
 Modern all‑in‑one POS untuk UMKM Indonesia — cashier, inventory, sales, customers, reports, loyalty & multi‑outlet. Dibangun menggunakan Next.js (App Router) + TypeScript + Tailwind CSS + Prisma (PostgreSQL).
 
 Ringkasan singkat
 -----------------
-KARSIR‑UMKM adalah aplikasi web Point‑Of‑Sale yang menargetkan usaha mikro, kecil, dan menengah. Fokus pada alur kasir cepat, manajemen inventori multi‑outlet, laporan usaha, dan fitur loyalty. UI/UX dibuat dengan Next.js + TypeScript dan utilitas Tailwind CSS; persistence dan schema‑driven model dikelola dengan Prisma (schema.prisma ada di folder prisma/).
+My Kasir Gweh adalah aplikasi web Point‑Of‑Sale yang menargetkan usaha mikro, kecil, dan menengah. Fokus pada alur kasir cepat, manajemen inventori multi‑outlet, laporan usaha, dan fitur loyalty. UI/UX dibuat dengan Next.js + TypeScript dan utilitas Tailwind CSS; persistence dan schema‑driven model dikelola dengan Prisma (schema.prisma ada di folder prisma/).
 
 Daftar isi
 ---------
@@ -100,7 +100,7 @@ Prasyarat:
 Langkah:
 ```
 1. Clone
-   git clone https://github.com/sannnproject/KARSIR-UMKM.git
+   git clone https://github.com/matchadesu_/KARSIR-UMKM.git
    cd KARSIR-UMKM
 ```
 2. Periksa package.json
@@ -127,7 +127,7 @@ Environment variables (rekomendasi .env.example)
 Buat file `.env` atau `.env.local` di root:
 ```
 # Database
-DATABASE_URL="postgresql://dbuser:dbpass@localhost:5432/karsir_umkm?schema=public"
+DATABASE_URL="postgresql://dbuser:dbpass@localhost:5432/my_kasir_gweh?schema=public"
 
 # Next.js / app
 NEXT_PUBLIC_BASE_URL="http://localhost:3000"

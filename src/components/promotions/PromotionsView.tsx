@@ -25,7 +25,7 @@ export const PromotionsView: React.FC = () => {
   const openCreate = () => {
     setEditingPromo(null);
     setCode('PROMO' + Math.floor(10 + Math.random() * 90));
-    setName('Promo Spesial KasirKu');
+    setName('Promo Spesial My Kasir Gweh');
     setType('PERCENTAGE');
     setValue(10);
     setMinPurchase(50000);

@@ -67,12 +67,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </div>
           <div className="hidden xs:block sm:block">
             <div className="text-xs sm:text-sm font-black tracking-tight text-[#1a1d24] dark:text-[#f4f2ec] flex items-center gap-1">
-              <span>KasirKu</span>
+              <span>My Kasir Gweh</span>
               <span className="text-[9px] uppercase font-bold tracking-wider px-1 sm:px-1.5 py-0.2 rounded-md bg-[#efece6] text-[#333a47] dark:bg-[#252b36] dark:text-[#e4e2db]">
                 UMKM
               </span>
               <span className="text-[8px] font-black tracking-wider px-1 py-0.2 rounded bg-amber-500/15 text-amber-700 dark:text-amber-300 dark:bg-amber-500/20 hidden sm:inline">
-                by SFG
+                by matchadesu_
               </span>
             </div>
             <p className="text-[9px] text-[#70798a] dark:text-[#9aa2b0] font-medium hidden sm:block">POS & ERP Bisnis</p>

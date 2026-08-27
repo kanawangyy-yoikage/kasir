@@ -133,7 +133,7 @@ export const MobileNav: React.FC = () => {
             <div className="p-4 border-b border-[#e2ded6] dark:border-[#2e3542] flex items-center justify-between bg-[#f7f6f2] dark:bg-[#181b20] shrink-0">
               <div>
                 <h3 className="text-sm font-black text-[#1a1d24] dark:text-[#f4f2ec]">
-                  Semua Modul KasirKu ERP
+                  Semua Modul My Kasir Gweh ERP
                 </h3>
                 <p className="text-[11px] text-[#6c7585] dark:text-[#9aa2b0]">
                   Outlet: {activeOutlet.name} • Peran: {user.role}

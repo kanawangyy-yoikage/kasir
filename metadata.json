@@ -1,5 +1,5 @@
 {
-  "name": "KasirKu POS & ERP UMKM",
+  "name": "My Kasir Gweh POS & ERP UMKM",
   "description": "Aplikasi Kasir POS Pintar & Manajemen Bisnis UMKM Terintegrasi",
   "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

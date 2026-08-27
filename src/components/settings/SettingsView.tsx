@@ -43,7 +43,7 @@ export const SettingsView: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `backup_kasirku_pos_${Date.now()}.json`;
+    link.download = `backup_my_kasir_gweh_${Date.now()}.json`;
     link.click();
     URL.revokeObjectURL(url);
     showToast('success', 'File cadangan JSON database berhasil diunduh.');

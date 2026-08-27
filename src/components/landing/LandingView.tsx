@@ -35,7 +35,7 @@ export const LandingView: React.FC = () => {
           </div>
 
           <h1 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight">
-            Aplikasi Kasir Pintar & Manajemen Bisnis Terintegrasi.
+            Aplikasi Kasir Pintar & Manajemen Bisnis Terintegrasi — My Kasir Gweh.
           </h1>
 
           <p className="text-xs sm:text-sm text-[#b8c0cf] max-w-2xl leading-relaxed">

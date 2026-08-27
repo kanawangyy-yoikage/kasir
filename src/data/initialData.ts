@@ -51,7 +51,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'usr_1',
     name: 'Budi Santoso',
-    email: 'budi.owner@kasirku.id',
+    email: 'budi.owner@matchadesu.id',
     role: 'OWNER',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     outletId: 'out_1',
@@ -60,7 +60,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'usr_2',
     name: 'Siti Rahmawati',
-    email: 'siti.manager@kasirku.id',
+    email: 'siti.manager@matchadesu.id',
     role: 'MANAGER',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
     outletId: 'out_1',
@@ -69,7 +69,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'usr_3',
     name: 'Dimas Pratama',
-    email: 'dimas.kasir@kasirku.id',
+    email: 'dimas.kasir@matchadesu.id',
     role: 'CASHIER',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
     outletId: 'out_1',
@@ -78,7 +78,7 @@ export const INITIAL_USERS: User[] = [
   {
     id: 'usr_4',
     name: 'Ahmad Gudang',
-    email: 'ahmad.inventory@kasirku.id',
+    email: 'ahmad.inventory@matchadesu.id',
     role: 'STAFF_INVENTORY',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
     outletId: 'out_1',
@@ -262,7 +262,7 @@ export const INITIAL_PRODUCTS: Product[] = [
   },
   {
     id: 'prod_11',
-    name: 'Tumbler Stainless KasirKu 500ml',
+    name: 'Tumbler Stainless My Kasir Gweh 500ml',
     sku: 'RTL-001',
     barcode: '899100100011',
     categoryId: 'cat_retail',
@@ -596,7 +596,7 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
       {
         id: 'ci_5',
         productId: 'prod_11',
-        productName: 'Tumbler Stainless KasirKu 500ml',
+        productName: 'Tumbler Stainless My Kasir Gweh 500ml',
         sku: 'RTL-001',
         price: 135000,
         costPrice: 65000,
@@ -637,19 +637,19 @@ export const INITIAL_TRANSACTIONS: Transaction[] = [
 ];
 
 export const INITIAL_SETTINGS: StoreSettings = {
-  name: 'KasirKu Coffee & Eatery',
+  name: 'My Kasir Gweh Coffee & Eatery',
   tagline: 'Kopi & Makanan Nusantara Berkualitas',
   address: 'Jl. Jenderal Sudirman No. 45, Jakarta Pusat 10220',
   phone: '0812-8888-0101',
-  email: 'info@kasirku.id',
-  website: 'https://kasirku.id',
+  email: 'info@matchadesu.id',
+  website: 'https://matchadesu.id',
   taxEnabled: true,
   taxRate: 0.11, // 11% PB1 / PPN
   serviceFeeEnabled: true,
   serviceFeeRate: 0.05, // 5% Service Charge
   currency: 'IDR',
-  receiptHeader: 'KASIRKU COFFEE & EATERY\nOutlet Sudirman Jakarta\nNPWP: 01.234.567.8-012.000',
-  receiptFooter: 'Terima kasih atas kunjungan Anda!\nFollow Instagram: @kasirku.id\nWifi: KasirKu_Guest (Pass: kopienak)',
+  receiptHeader: 'MY KASIR GWEH COFFEE & EATERY\nOutlet Sudirman Jakarta\nNPWP: 01.234.567.8-012.000',
+  receiptFooter: 'Terima kasih atas kunjungan Anda!\nFollow Instagram: @matchadesu.id\nWifi: My Kasir Gweh_Guest (Pass: kopienak)',
   paperWidth: '58mm',
   enableSound: true,
   autoPrintReceipt: false,
