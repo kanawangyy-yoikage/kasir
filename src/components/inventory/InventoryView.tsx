@@ -47,6 +47,42 @@ export const InventoryView: React.FC = () => {
   const [transferQty, setTransferQty] = useState(1);
   const [transferNote, setTransferNote] = useState('');
 
+  // Editable stock quantity drafts keyed by `${productId}::${outletId}`
+  const [stockDrafts, setStockDrafts] = useState<Record<string, string>>({});
+  const stockKey = (productId: string, outletId: string) => `${productId}::${outletId}`;
+
+  const getStockDraft = (productId: string, outletId: string, current: number) =>
+    stockDrafts[stockKey(productId, outletId)] ?? String(current);
+
+  const clearStockDraft = (productId: string, outletId: string) => {
+    setStockDrafts((prev) => {
+      const next = { ...prev };
+      delete next[stockKey(productId, outletId)];
+      return next;
+    });
+  };
+
+  // Absolute commit: delta = typed qty - current stock
+  const commitStockDraft = (productId: string, outletId: string, current: number, raw: string) => {
+    const parsed = parseInt(raw, 10);
+    if (Number.isNaN(parsed) || parsed < 0) {
+      clearStockDraft(productId, outletId);
+      return;
+    }
+    const delta = parsed - current;
+    if (delta !== 0) {
+      updateProductStock(productId, outletId, delta, 'ADJUSTMENT', `Penyesuaian manual oleh ${user.name}`);
+    }
+    clearStockDraft(productId, outletId);
+  };
+
+  // Step by +/-1 (kept as convenience), clearing any pending draft
+  const stepStock = (productId: string, outletId: string, current: number, delta: number) => {
+    if (delta < 0 && current <= 0) return;
+    updateProductStock(productId, outletId, delta, 'ADJUSTMENT', `Penyesuaian manual (${delta > 0 ? 'tambah' : 'kurang'}) oleh ${user.name}`);
+    clearStockDraft(productId, outletId);
+  };
+
   const filteredProducts = products.filter((p) => {
     const q = searchQuery.toLowerCase().trim();
     return !q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q);
@@ -155,7 +191,7 @@ export const InventoryView: React.FC = () => {
             Kontrol stok fisik per cabang, audit opname selisih, dan mutasi barang antar outlet
           </p>
           <p className="text-[11px] text-slate-400 mt-1">
-            Gunakan tombol <span className="font-mono">+ / −</span> pada kolom tiap cabang untuk menambah / mengurangi stok produk secara cepat (tanpa opname penuh).
+            Ketik langsung jumlah stok di kolom tiap cabang (tekan <span className="font-mono">Enter</span> untuk simpan), atau gunakan tombol <span className="font-mono">+ / −</span> untuk menyesuaikan cepat.
           </p>
         </div>
 
@@ -254,39 +290,42 @@ export const InventoryView: React.FC = () => {
                               <button
                                 type="button"
                                 title={`Kurangi stok ${p.name} di ${o.name}`}
-                                onClick={() =>
-                                  updateProductStock(
-                                    p.id,
-                                    o.id,
-                                    -1,
-                                    'ADJUSTMENT',
-                                    `Penyesuaian manual (kurang) oleh ${user.name}`
-                                  )
-                                }
+                                onClick={() => stepStock(p.id, o.id, s, -1)}
                                 disabled={s <= 0}
-                                className="h-6 w-6 inline-flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-900/40 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                                className="h-7 w-7 inline-flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-900/40 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                               >
                                 <Minus className="h-3.5 w-3.5" />
                               </button>
-                              <Badge
-                                variant={s <= 0 ? 'danger' : s <= p.minStock ? 'warning' : 'default'}
-                                size="sm"
-                              >
-                                {s} {p.unit}
-                              </Badge>
+                              <input
+                                type="number"
+                                inputMode="numeric"
+                                min={0}
+                                value={getStockDraft(p.id, o.id, s)}
+                                onFocus={(e) => e.target.select()}
+                                onChange={(e) =>
+                                  setStockDrafts((prev) => ({
+                                    ...prev,
+                                    [stockKey(p.id, o.id)]: e.target.value,
+                                  }))
+                                }
+                                onBlur={(e) => commitStockDraft(p.id, o.id, s, e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+                                }}
+                                title={`Ketik jumlah stok ${p.name} di ${o.name}, tekan Enter untuk simpan`}
+                                className={`h-7 w-16 text-center text-xs font-black rounded-md border bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 outline-none ${
+                                  s <= 0
+                                    ? 'border-rose-300 text-rose-600'
+                                    : s <= p.minStock
+                                    ? 'border-amber-300 text-amber-600'
+                                    : 'border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100'
+                                }`}
+                              />
                               <button
                                 type="button"
                                 title={`Tambah stok ${p.name} di ${o.name}`}
-                                onClick={() =>
-                                  updateProductStock(
-                                    p.id,
-                                    o.id,
-                                    1,
-                                    'ADJUSTMENT',
-                                    `Penyesuaian manual (tambah) oleh ${user.name}`
-                                  )
-                                }
-                                className="h-6 w-6 inline-flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-100 hover:text-emerald-600 dark:hover:bg-emerald-900/40 transition-colors"
+                                onClick={() => stepStock(p.id, o.id, s, 1)}
+                                className="h-7 w-7 inline-flex items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-100 hover:text-emerald-600 dark:hover:bg-emerald-900/40 transition-colors"
                               >
                                 <Plus className="h-3.5 w-3.5" />
                               </button>
