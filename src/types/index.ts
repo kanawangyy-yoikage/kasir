@@ -279,6 +279,8 @@ export interface StoreSettings {
   autoPrintReceipt: boolean;
   pointsPerRupiah: number; // e.g. 1 point per 10.000 spent
   pointRedemptionRate: number; // 1 point = Rp 100
+  /** Raw static QRIS payload string, decoded from the uploaded merchant QRIS image. */
+  qrisStatic?: string;
 }
 
 export interface ToastMessage {

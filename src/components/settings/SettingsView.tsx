@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Settings, Save, Download, Upload, RotateCcw, Volume2, Store } from 'lucide-react';
+import { Settings, Save, Download, Upload, RotateCcw, Volume2, Store, QrCode, Trash2, Loader2 } from 'lucide-react';
+import { decodeQRFromFile, fileToCompressedDataUrl } from '@/utils/image';
+import { validateQRIS, parseQRIS } from '@/lib/qris';
 
 export const SettingsView: React.FC = () => {
   const {
@@ -23,6 +25,9 @@ export const SettingsView: React.FC = () => {
   const [taxEnabled, setTaxEnabled] = useState(settings.taxEnabled);
   const [serviceFeeEnabled, setServiceFeeEnabled] = useState(settings.serviceFeeEnabled);
   const [receiptFooter, setReceiptFooter] = useState(settings.receiptFooter);
+  const [qrisStatic, setQrisStatic] = useState(settings.qrisStatic || '');
+  const [qrisPreview, setQrisPreview] = useState<string>('');
+  const [qrisBusy, setQrisBusy] = useState(false);
 
   const handleSaveSettings = () => {
     updateSettings({
@@ -33,8 +38,57 @@ export const SettingsView: React.FC = () => {
       taxEnabled,
       serviceFeeEnabled,
       receiptFooter,
+      qrisStatic: qrisStatic || undefined,
     });
     showToast('success', 'Pengaturan toko berhasil diperbarui!');
+  };
+
+  const handleQrisImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+
+    setQrisBusy(true);
+    try {
+      // Compress + preview (used as the stored image for rendering later too)
+      const dataUrl = await fileToCompressedDataUrl(file, {
+        maxDimension: 1024,
+        quality: 0.9,
+        type: 'image/png',
+      });
+      setQrisPreview(dataUrl);
+
+      // Decode the QR payload
+      const qrisString = await decodeQRFromFile(file);
+      if (!qrisString) {
+        showToast('error', 'Tidak dapat membaca kode QR dari gambar. Gunakan gambar QRIS yang jelas.');
+        setQrisPreview('');
+        return;
+      }
+
+      // Validate it looks like a QRIS payload
+      const parsed = parseQRIS(qrisString);
+      const validation = validateQRIS(parsed);
+      if (!validation.valid) {
+        showToast('error', 'Gambar bukan QRIS yang valid: ' + validation.errors.join(', '));
+        setQrisPreview('');
+        return;
+      }
+
+      setQrisStatic(qrisString);
+      showToast('success', 'QRIS statis berhasil dibaca dari gambar.');
+    } catch (err) {
+      console.error(err);
+      showToast('error', err instanceof Error ? err.message : 'Gagal mengunggah gambar QRIS.');
+      setQrisPreview('');
+    } finally {
+      setQrisBusy(false);
+    }
+  };
+
+  const handleClearQris = () => {
+    setQrisStatic('');
+    setQrisPreview('');
   };
 
   const handleDownloadBackup = () => {
@@ -180,6 +234,76 @@ export const SettingsView: React.FC = () => {
         >
           Simpan Konfigurasi
         </Button>
+      </Card>
+
+      {/* QRIS Configuration */}
+      <Card className="p-6 space-y-4">
+        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+          <QrCode className="h-4 w-4 text-blue-600" />
+          <span>QRIS Statis (untuk QRIS Dinamis saat pembayaran)</span>
+        </h3>
+        <p className="text-xs text-slate-500">
+          Unggah gambar QRIS statis milik toko Anda. Sistem akan membaca kode nya lalu mengubahnya
+          menjadi QRIS Dinamis (dengan nominal sesuai transaksi) setiap kali pembayaran QRIS di kasir.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-start gap-4">
+          {/* Preview */}
+          <div className="shrink-0 w-40 h-40 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+            {qrisPreview ? (
+              <img
+                src={qrisPreview}
+                alt="Pratinjau QRIS"
+                className="w-full h-full object-contain"
+              />
+            ) : qrisStatic ? (
+              <QrCode className="h-10 w-10 text-emerald-600" />
+            ) : (
+              <span className="text-[10px] text-slate-400 text-center px-2">
+                Belum ada QRIS
+              </span>
+            )}
+          </div>
+
+          <div className="space-y-3 flex-1">
+            <label className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 cursor-pointer">
+              {qrisBusy ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Upload className="h-4 w-4" />
+              )}
+              <span>{qrisBusy ? 'Membaca QRIS...' : 'Unggah Gambar QRIS'}</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleQrisImageUpload}
+                className="hidden"
+                disabled={qrisBusy}
+              />
+            </label>
+
+            {qrisStatic && (
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-1 rounded-lg">
+                  QRIS statis tersimpan ✓
+                </span>
+                <button
+                  onClick={handleClearQris}
+                  className="inline-flex items-center gap-1 text-[10px] font-semibold text-rose-600 hover:underline"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  Hapus
+                </button>
+              </div>
+            )}
+
+            {qrisStatic && (
+              <p className="text-[10px] text-slate-400 break-all bg-slate-50 dark:bg-slate-800 p-2 rounded-lg font-mono">
+                {qrisStatic}
+              </p>
+            )}
+          </div>
+        </div>
       </Card>
 
       {/* Database Backup & Restore */}

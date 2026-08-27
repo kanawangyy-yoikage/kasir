@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useCart } from '@/context/CartContext';
 import { Card } from '@/components/ui/Card';
@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { formatRupiah, generateInvoiceNumber, playSound } from '@/utils/formatters';
 import { Product, PaymentMethod, Transaction } from '@/types';
+import { convertQRIS } from '@/lib/qris';
+import QRCode from 'qrcode';
 import {
   Search,
   Barcode,
@@ -99,6 +101,53 @@ export const PosTerminal: React.FC = () => {
   const [cashGiven, setCashGiven] = useState<number>(0);
   const [paymentRefNumber, setPaymentRefNumber] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('BCA');
+
+  // Dynamic QRIS state
+  const [qrisDataUrl, setQrisDataUrl] = useState<string>('');
+  const [qrisError, setQrisError] = useState<string>('');
+
+  // Build the dynamic QRIS whenever QRIS is the selected method or the total changes
+  useEffect(() => {
+    if (paymentMethod !== 'QRIS' || grandTotal <= 0) {
+      setQrisDataUrl('');
+      setQrisError('');
+      return;
+    }
+
+    const staticQris = settings.qrisStatic;
+    if (!staticQris) {
+      setQrisDataUrl('');
+      setQrisError('Belum ada QRIS statis. Atur di Pengaturan > QRIS Statis.');
+      return;
+    }
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const dynamic = convertQRIS(staticQris, { amount: grandTotal });
+        const dataUrl = await QRCode.toDataURL(dynamic, {
+          errorCorrectionLevel: 'M',
+          margin: 2,
+          width: 256,
+          color: { dark: '#000000', light: '#ffffff' },
+        });
+        if (!cancelled) {
+          setQrisDataUrl(dataUrl);
+          setQrisError('');
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) {
+          setQrisDataUrl('');
+          setQrisError('Gagal membuat QRIS dinamis.');
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [paymentMethod, grandTotal, settings.qrisStatic]);
 
   // Active note editing item
   const [noteEditingItemId, setNoteEditingItemId] = useState<string | null>(null);
@@ -1173,10 +1222,32 @@ export const PosTerminal: React.FC = () => {
 
           {paymentMethod === 'QRIS' && (
             <div className="flex flex-col items-center justify-center p-6 bg-[#f7f6f2] dark:bg-[#181b20] rounded-2xl border border-[#e2ded6] dark:border-[#2e3542] text-center space-y-3">
-              <div className="h-44 w-44 bg-white p-3 rounded-2xl shadow-md border border-[#e2ded6] flex flex-col items-center justify-center">
-                <QrCode className="h-32 w-32 text-[#1a1d24]" />
-                <span className="text-[9px] font-bold text-[#70798a]">NMID: ID10200392019</span>
-              </div>
+              {qrisError ? (
+                <div className="flex flex-col items-center justify-center py-6 text-center space-y-2">
+                  <AlertCircle className="h-10 w-10 text-rose-500" />
+                  <p className="text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec]">
+                    QRIS Dinamis Belum Bisa Ditampilkan
+                  </p>
+                  <p className="text-[11px] text-[#70798a] max-w-xs">{qrisError}</p>
+                  <p className="text-[10px] text-[#9aa2b0]">
+                    Buka menu Pengaturan &gt; QRIS Statis untuk mengunggah kode QRIS milik toko Anda.
+                  </p>
+                </div>
+              ) : qrisDataUrl ? (
+                <div className="h-56 w-56 bg-white p-3 rounded-2xl shadow-md border border-[#e2ded6] flex flex-col items-center justify-center">
+                  <img
+                    src={qrisDataUrl}
+                    alt="QRIS Dinamis"
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="h-44 w-44 bg-white p-3 rounded-2xl shadow-md border border-[#e2ded6] flex items-center justify-center">
+                  <div className="animate-pulse text-[10px] font-bold text-[#70798a]">
+                    Menyiapkan QRIS...
+                  </div>
+                </div>
+              )}
               <div>
                 <p className="text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec]">
                   Scan QRIS Dinamis (Gopay, OVO, Dana, BCA, ShopeePay, LinkAja)
