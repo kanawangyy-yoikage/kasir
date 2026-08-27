@@ -15,10 +15,8 @@ import {
   Plus,
   Minus,
   Trash2,
-  CreditCard,
   QrCode,
   Banknote,
-  Building2,
   Printer,
   AlertCircle,
   FileText,
@@ -83,8 +81,6 @@ export const PosTerminal: React.FC = () => {
   // Payment state
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CASH');
   const [cashGiven, setCashGiven] = useState<number>(0);
-  const [paymentRefNumber, setPaymentRefNumber] = useState<string>('');
-  const [selectedBank, setSelectedBank] = useState<string>('BCA');
 
   // Dynamic QRIS state
   const [qrisDataUrl, setQrisDataUrl] = useState<string>('');
@@ -224,11 +220,9 @@ export const PosTerminal: React.FC = () => {
         amountPaid: paymentMethod === 'CASH' ? cashGiven : grandTotal,
         change,
         referenceNumber:
-          paymentRefNumber ||
-          (paymentMethod === 'QRIS'
+          paymentMethod === 'QRIS'
             ? `QRIS-${Math.floor(10000000 + Math.random() * 90000000)}`
-            : undefined),
-        bankName: paymentMethod === 'DEBIT_EDC' || paymentMethod === 'TRANSFER' ? selectedBank : undefined,
+            : undefined,
       },
       status: 'COMPLETED',
       createdAt: new Date().toISOString(),
@@ -947,30 +941,6 @@ export const PosTerminal: React.FC = () => {
               <QrCode className="h-5 w-5" />
               <span className="text-xs">QRIS Instan</span>
             </button>
-
-            <button
-              onClick={() => setPaymentMethod('DEBIT_EDC')}
-              className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 min-h-[48px] cursor-pointer ${
-                paymentMethod === 'DEBIT_EDC'
-                  ? 'border-[#1f232b] bg-[#1f232b] text-[#f7f6f2] dark:border-[#f5f4ef] dark:bg-[#f5f4ef] dark:text-[#181b21] font-bold shadow-xs'
-                  : 'border-[#e2ded6] text-[#485060] dark:border-[#2e3542] dark:text-[#9aa2b0] bg-[#fcfbf8] dark:bg-[#1c2026]'
-              }`}
-            >
-              <CreditCard className="h-5 w-5" />
-              <span className="text-xs">Debit EDC</span>
-            </button>
-
-            <button
-              onClick={() => setPaymentMethod('TRANSFER')}
-              className={`p-3 rounded-2xl border text-center transition-all flex flex-col items-center gap-1.5 min-h-[48px] cursor-pointer ${
-                paymentMethod === 'TRANSFER'
-                  ? 'border-[#1f232b] bg-[#1f232b] text-[#f7f6f2] dark:border-[#f5f4ef] dark:bg-[#f5f4ef] dark:text-[#181b21] font-bold shadow-xs'
-                  : 'border-[#e2ded6] text-[#485060] dark:border-[#2e3542] dark:text-[#9aa2b0] bg-[#fcfbf8] dark:bg-[#1c2026]'
-              }`}
-            >
-              <Building2 className="h-5 w-5" />
-              <span className="text-xs">Transfer</span>
-            </button>
           </div>
 
           {/* Details based on Payment Method */}
@@ -1050,40 +1020,6 @@ export const PosTerminal: React.FC = () => {
                 <p className="text-[11px] text-[#70798a] mt-0.5">
                   Total Tagihan: <strong>{formatRupiah(grandTotal)}</strong>
                 </p>
-              </div>
-            </div>
-          )}
-
-          {(paymentMethod === 'DEBIT_EDC' || paymentMethod === 'TRANSFER') && (
-            <div className="space-y-3 bg-[#f7f6f2] dark:bg-[#181b20] p-4 rounded-2xl border border-[#e2ded6] dark:border-[#2e3542]">
-              <div>
-                <label className="block text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec] mb-1">
-                  Pilih Bank / Mesin EDC
-                </label>
-                <select
-                  value={selectedBank}
-                  onChange={(e) => setSelectedBank(e.target.value)}
-                  className="w-full h-11 px-3 bg-[#fcfbf8] dark:bg-[#20252e] border border-[#dcd7ce] dark:border-[#333b49] rounded-2xl text-xs font-bold min-h-[44px]"
-                >
-                  <option value="BCA">BCA (Bank Central Asia)</option>
-                  <option value="Mandiri">Bank Mandiri</option>
-                  <option value="BRI">Bank BRI</option>
-                  <option value="BNI">Bank BNI</option>
-                  <option value="CIMB">CIMB Niaga</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec] mb-1">
-                  Nomor Referensi / Approval Code EDC (Opsional)
-                </label>
-                <input
-                  type="text"
-                  value={paymentRefNumber}
-                  onChange={(e) => setPaymentRefNumber(e.target.value)}
-                  placeholder="Contoh: REF-88910293"
-                  className="w-full h-11 px-3 bg-[#fcfbf8] dark:bg-[#20252e] border border-[#dcd7ce] dark:border-[#333b49] rounded-2xl text-xs font-bold min-h-[44px]"
-                />
               </div>
             </div>
           )}

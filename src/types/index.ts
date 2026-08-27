@@ -68,14 +68,13 @@ export interface CartItem {
   subtotal: number;
 }
 
-export type PaymentMethod = 'CASH' | 'QRIS' | 'DEBIT_EDC' | 'TRANSFER';
+export type PaymentMethod = 'CASH' | 'QRIS';
 
 export interface PaymentDetails {
   method: PaymentMethod;
   amountPaid: number;
   change: number;
   referenceNumber?: string;
-  bankName?: string;
 }
 
 export interface HeldOrder {

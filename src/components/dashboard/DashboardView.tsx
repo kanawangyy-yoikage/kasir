@@ -9,7 +9,6 @@ import {
   DollarSign,
   ShoppingCart,
   AlertTriangle,
-  CreditCard,
   QrCode,
   Banknote,
   ArrowUpRight,
@@ -83,8 +82,6 @@ export const DashboardView: React.FC = () => {
     const map: Record<string, number> = {
       CASH: 0,
       QRIS: 0,
-      DEBIT_EDC: 0,
-      TRANSFER: 0,
     };
 
     filteredTransactions.forEach((t) => {
@@ -315,27 +312,6 @@ export const DashboardView: React.FC = () => {
                   className="h-full bg-[#373e4d] dark:bg-[#c9ced8] rounded-full"
                   style={{
                     width: `${totalOmset > 0 ? (paymentBreakdown.QRIS / totalOmset) * 100 : 0}%`,
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Debit EDC */}
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs font-bold text-[#1a1d24] dark:text-[#f4f2ec]">
-                <span className="flex items-center gap-1.5">
-                  <CreditCard className="h-3.5 w-3.5 text-[#485060] dark:text-[#a0a8b7]" />
-                  <span>Debit EDC / Kartu</span>
-                </span>
-                <span>{formatRupiah(paymentBreakdown.DEBIT_EDC)}</span>
-              </div>
-              <div className="h-2 w-full bg-[#efece6] dark:bg-[#252b36] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-[#555d6e] dark:bg-[#9aa2b0] rounded-full"
-                  style={{
-                    width: `${
-                      totalOmset > 0 ? (paymentBreakdown.DEBIT_EDC / totalOmset) * 100 : 0
-                    }%`,
                   }}
                 />
               </div>
