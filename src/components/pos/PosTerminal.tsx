@@ -191,7 +191,6 @@ export const PosTerminal: React.FC = () => {
     }
     setPaymentMethod('CASH');
     setCashGiven(grandTotal);
-    setPaymentRefNumber('');
     setIsPaymentModalOpen(true);
   };
 
